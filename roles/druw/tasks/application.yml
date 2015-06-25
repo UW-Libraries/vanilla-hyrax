@@ -1,0 +1,87 @@
+---
+- name: install git
+  sudo: true
+  yum: name=git state=present
+
+- name: git checkout druw
+  git:
+    repo={{ application_repo }}
+    dest={{ application_home }}
+    accept_hostkey=true
+    version=master
+
+- name: create blacklight.yml
+  template:
+    src=blacklight.yml.j2
+    dest="{{ application_home }}/config/blacklight.yml"
+
+#- name: create browse_everything_providers.yml
+#  sudo: false
+#  template:
+#    src=browse_everything_providers.yml.j2
+#    dest="{{ application_home }}/config/browse_everything_providers.yml"
+
+- name: create database.yml
+  template:
+    src=database.yml.j2
+    dest="{{ application_home }}/config/database.yml"
+
+- name: create fedora.yml
+  template:
+    src=fedora.yml.j2
+    dest="{{ application_home }}/config/fedora.yml"
+
+- name: create redis.yml
+  template:
+    src=redis.yml.j2
+    dest="{{ application_home }}/config/redis.yml"
+
+- name: create solr.yml
+  template:
+    src=solr.yml.j2
+    dest="{{ application_home }}/config/solr.yml"
+
+- name: run bundle install
+  command: "cd {{ application_home }} &&bundle install --path vendor/bundle"
+
+#- name: Check development secret
+#  command: "fgrep development {{ application_home }}/config/secrets.yml"
+#  register: devkey
+#  ignore_errors: True
+
+- name: Check if secrets.yml exists
+  stat: path="{{ application_home }}/config/secrets.yml"
+  register: secrets_file
+
+- name: create development secret
+  command: "cd {{ application_home }} bundle exec rake secret"
+  register: dev_secret
+  when: secrets_file.stat.exists == False
+
+- name: create test secret
+  command: "cd {{ application_home }} bundle exec rake secret"
+  register: test_secret
+  when: secrets_file.stat.exists == False
+
+- name: create production secret
+  command: "cd {{ application_home }} bundle exec rake secret"
+  register: prod_secret
+  when: secrets_file.stat.exists == False
+
+- name: create secrets.yml
+  sudo: false
+  template:
+    src=secrets.yml.j2
+    dest= "/home/vagrant/uwlib-druw/config/secrets.yml"
+  when: secrets_file.stat.exists == False
+
+- name: Check if development.sqlite3 exists
+  stat: path="{{ application_home }}/db/development.sqlite3"
+  register: dev_db
+
+- name: Create development.sqlite3
+  command: "cd {{ application_home }} bundle exec rake db:migrate"
+  when: dev_db.stat.exists == False
+
+- include: hydra-jetty.yml
+  tags: "jetty"

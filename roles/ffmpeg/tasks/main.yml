@@ -1,0 +1,50 @@
+# http://trac.ffmpeg.org/wiki/CompilationGuide/Centos
+
+  - stat: path=/usr/bin/ffmpeg
+    register: st 
+
+  - name: make sources dir
+    file: path={{ ffmpeg_sources }} state=directory
+    when: not st.stat.exists 
+
+  - name: install dependencies
+    yum: pkg={{ item }} state=latest
+    with_items: 
+      - autoconf
+      - automake
+      - gcc
+      - gcc-c++
+      - git
+      - libtool
+      - make
+      - nasm
+      - pkgconfig
+      - zlib-devel
+    when: not st.stat.exists 
+
+  - include: yasm.yml 
+    when: not st.stat.exists 
+
+  - include: libx264.yml
+    when: not st.stat.exists 
+
+  - include: libfdk_aac.yml
+    when: not st.stat.exists 
+
+  - include: libmp3lame.yml
+    when: not st.stat.exists 
+
+  - include: libopus.yml
+    when: not st.stat.exists 
+
+  - include: libogg.yml
+    when: not st.stat.exists 
+
+  - include: libvorbis.yml
+    when: not st.stat.exists 
+
+  - include: libvpx.yml
+    when: not st.stat.exists 
+
+  - include: ffmpeg.yml
+    when: not st.stat.exists 

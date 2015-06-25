@@ -1,0 +1,17 @@
+# http://trac.ffmpeg.org/wiki/CompilationGuide/Centos
+
+  - name: get fdk-aac src
+    git: repo=git://git.code.sf.net/p/opencore-amr/fdk-aac dest="{{ ffmpeg_sources }}/fdk-aac" accept_hostkey=yes depth=1
+
+  - name: fdk-aac config steps
+    command: chdir="{{ ffmpeg_sources }}/fdk-aac" {{ item }}
+    with_items: 
+      - 'autoreconf -fiv'
+      - './configure --prefix="{{ ffmpeg_build }}" --disable-shared'
+   
+  - name: run make for fdk-aac
+    shell: chdir="{{ ffmpeg_sources }}/fdk-aac" {{ item }} 
+    with_items:
+      - 'make'
+      - 'make install'
+      - 'make distclean'

@@ -1,0 +1,29 @@
+#default: &default
+#  adapter: postgresql
+#  encoding: unicode
+#  host: localhost
+#  username: YOURDBUSER
+#  password: YOURDBPWD
+#  pool: 5
+#  timeout: 5000
+
+default: &default
+  adapter: sqlite3
+  pool: 5
+  timeout: 5000
+
+development:
+  adapter: sqlite3
+  pool: 5
+  timeout: 5000
+  database: {{ devdb_name }}
+
+production:
+  adapter: sqlite3
+  pool: 5
+  timeout: 5000
+  database: {{ proddb_name }}
+
+test:
+  database: {{ testdb_name }}
+  <<: *default

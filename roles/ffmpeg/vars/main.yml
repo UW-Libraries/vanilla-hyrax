@@ -1,0 +1,4 @@
+---
+ffmpeg_sources: /usr/src/ffmpeg_sources
+ffmpeg_build: /usr/local/bin/ffmpeg_build
+bin_dir: /usr/bin

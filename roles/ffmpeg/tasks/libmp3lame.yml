@@ -1,0 +1,16 @@
+# http://trac.ffmpeg.org/wiki/CompilationGuide/Centos
+
+  - name: get lame-3.99.5 src
+    unarchive: src=lame-3.99.5.tar.gz dest="{{ ffmpeg_sources }}"
+
+  - name: lame-3.99.5 config steps
+    command: chdir="{{ ffmpeg_sources }}/lame-3.99.5" {{ item }}
+    with_items: 
+      - './configure --prefix="{{ ffmpeg_build }}" --bindir="{{ bin_dir }}" --disable-shared --enable-nasm'
+   
+  - name: run make for lame-3.99.5
+    shell: chdir="{{ ffmpeg_sources }}/lame-3.99.5" {{ item }} 
+    with_items:
+      - 'make'
+      - 'make install'
+      - 'make distclean'

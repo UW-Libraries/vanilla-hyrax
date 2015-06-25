@@ -1,0 +1,17 @@
+# http://trac.ffmpeg.org/wiki/CompilationGuide/Centos
+
+  - name: get ffmpeg src
+    git: repo=git://source.ffmpeg.org/ffmpeg dest="{{ ffmpeg_sources }}/ffmpeg" depth=1 accept_hostkey=yes
+
+  - name: ffmpeg config steps
+    shell: chdir="{{ ffmpeg_sources }}/ffmpeg" {{ item }}
+    with_items: 
+      - 'PKG_CONFIG_PATH="{{ ffmpeg_build }}/lib/pkgconfig" ./configure --prefix="{{ ffmpeg_build }}" --extra-cflags="-I{{ ffmpeg_build }}/include" --extra-ldflags="-L{{ ffmpeg_build }}/lib" --bindir="{{ bin_dir }}" --enable-gpl --enable-nonfree --enable-libfdk_aac --enable-libmp3lame --enable-libopus --enable-libvorbis --enable-libvpx --enable-libx264'
+   
+  - name: run make for ffmpeg
+    shell: chdir="{{ ffmpeg_sources }}/ffmpeg" {{ item }} 
+    with_items:
+      - 'make'
+      - 'make install'
+      - 'make distclean'
+      - 'hash -r'

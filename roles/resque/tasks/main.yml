@@ -1,0 +1,5 @@
+  - name: copy init script
+    template: src=pool_q dest=/etc/rc.d/init.d/resque-pool mode=0755
+
+  - name: start resque
+    service: name=resque-pool state=started enabled=yes 

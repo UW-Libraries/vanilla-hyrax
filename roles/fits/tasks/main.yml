@@ -1,0 +1,14 @@
+  - name: install unzip 
+    yum: pkg=unzip state=latest 
+
+  - name: unpack fits 
+    unarchive: src=fits-0.6.2.zip dest=/usr/local/bin/ 
+
+  - name: fix fits path bug #23 https://code.google.com/p/fits/issues/detail?id=23
+    lineinfile: dest=/usr/local/bin/fits-0.6.2/fits.sh regexp="^FITS_HOME" line="FITS_HOME=/usr/local/bin/fits-0.6.2/"
+
+  - name: make fits executable
+    file: path=/usr/local/bin/fits-0.6.2/fits.sh mode=0755
+
+  - name: link to /usr/local/bin
+    file: state=link src=/usr/local/bin/fits-0.6.2/fits.sh dest=/usr/bin/fits

@@ -1,0 +1,17 @@
+# http://trac.ffmpeg.org/wiki/CompilationGuide/Centos
+
+  - name: get yasm src
+    git: repo=git://github.com/yasm/yasm.git dest="{{ ffmpeg_sources }}/yasm" accept_hostkey=yes depth=1
+
+  - name: yasm config steps
+    command: chdir="{{ ffmpeg_sources }}/yasm" {{ item }}
+    with_items: 
+      - 'autoreconf -fiv'
+      - './configure --prefix="{{ ffmpeg_build }}" --bindir="{{ bin_dir }}"'
+   
+  - name: run make for yasm
+    shell: chdir="{{ ffmpeg_sources }}/yasm" {{ item }} 
+    with_items:
+      - 'make'
+      - 'make install'
+      - 'make distclean'

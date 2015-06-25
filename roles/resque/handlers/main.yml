@@ -1,0 +1,3 @@
+---
+- name: restart resque-pool
+  service: name=resque-pool state=restarted

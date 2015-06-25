@@ -1,0 +1,16 @@
+# http://trac.ffmpeg.org/wiki/CompilationGuide/Centos
+
+  - name: get libogg-1.3.2 src
+    unarchive: src=libogg-1.3.2.tar.gz dest="{{ ffmpeg_sources }}"
+
+  - name: libogg-1.3.2 config steps
+    command: chdir="{{ ffmpeg_sources }}/libogg-1.3.2" {{ item }}
+    with_items: 
+      - './configure --prefix="{{ ffmpeg_build }}" --disable-shared'
+   
+  - name: run make for libogg-1.3.2
+    shell: chdir="{{ ffmpeg_sources }}/libogg-1.3.2" {{ item }} 
+    with_items:
+      - 'make'
+      - 'make install'
+      - 'make distclean'

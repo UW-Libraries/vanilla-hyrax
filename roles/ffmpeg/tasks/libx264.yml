@@ -1,0 +1,16 @@
+# http://trac.ffmpeg.org/wiki/CompilationGuide/Centos
+
+  - name: get x264 src
+    git: repo=git://git.videolan.org/x264 dest="{{ ffmpeg_sources }}/x264" depth=1 accept_hostkey=yes
+
+  - name: x264 config steps
+    command: chdir="{{ ffmpeg_sources }}/x264" {{ item }}
+    with_items: 
+      - './configure --prefix="{{ ffmpeg_build }}" --bindir="{{ bin_dir }}" --enable-static'
+   
+  - name: run make for x264
+    shell: chdir="{{ ffmpeg_sources }}/x264" {{ item }} 
+    with_items:
+      - 'make'
+      - 'make install'
+      - 'make distclean'

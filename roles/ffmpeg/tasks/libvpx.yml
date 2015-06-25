@@ -1,0 +1,16 @@
+# http://trac.ffmpeg.org/wiki/CompilationGuide/Centos
+
+  - name: get libvpx src
+    git: repo=https://chromium.googlesource.com/webm/libvpx.git dest="{{ ffmpeg_sources }}/libvpx" depth=1 accept_hostkey=yes
+
+  - name: libvpx config steps
+    command: chdir="{{ ffmpeg_sources }}/libvpx" {{ item }}
+    with_items: 
+      - './configure --prefix="{{ ffmpeg_build }}" --disable-examples'
+   
+  - name: run make for libvpx
+    shell: chdir="{{ ffmpeg_sources }}/libvpx" {{ item }} 
+    with_items:
+      - 'make'
+      - 'make install'
+      - 'make clean'
