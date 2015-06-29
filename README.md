@@ -2,6 +2,10 @@ Create a symlink from playbook.yml.localhost or playbook.yml.vagrant to playbook
 
 eg. ln -s playbook.yml.vagrant playbook.yml
 
+Create a symlink from either Vagrantfile.win or Vagrantfile.nix to Vagrantfile
+
+eg. ln -s Vagrantfile.nix Vagrantfile
+
 Copy and edit vars.yml.template  
 Replace application_repo path
 

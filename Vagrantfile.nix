@@ -14,7 +14,8 @@ Vagrant.configure(2) do |config|
     ansible.playbook = "playbook.yml"
     ansible.extra_vars = { ansible_ssh_user: 'vagrant',
                  ansible_connection: 'ssh',
-                 ansible_ssh_args: '-o ForwardAgent=yes' }
+                 ansible_ssh_args: '-o ForwardAgent=yes'}
     ansible.verbose = "vvv"
+    ANSIBLE_KEEP_REMOTE_FILES=1
   end
 end
