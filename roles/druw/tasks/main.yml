@@ -1,8 +1,13 @@
 ---
+  - yum: Install EPEL repo
+    yum:
+      name: "{{ epel_repo_url }}"
+      state: present  
+
   - yum: pkg={{ item }} state=latest
     with_items:
-      - ImageMagick-devel
       - clamav
+      - ImageMagick-devel
       - nodejs
       - poppler-utils
       - libreoffice-headless

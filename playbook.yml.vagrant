@@ -3,8 +3,8 @@
   sudo: true
   vars_files:
     - vars.yml
-  #pre_tasks:
-  tasks:
+  pre_tasks:
+  #tasks:
     - name: install 'Development tools' package group
       yum: name="@Development tools" state=latest
  
@@ -36,18 +36,18 @@
         - gdbm
         - gdbm-devel
 
-    - name: Install EPEL repo. Needed to for nodejs
-      yum:
-        name: "{{ epel_repo_url }}"
-        state: present
+    #- name: Install EPEL repo. Needed to for nodejs
+    #  yum:
+    #    name: "{{ epel_repo_url }}"
+    #    state: present
 
-    - name: Import EPEL GPG key.
-      rpm_key:
-        key: "{{ epel_repo_gpg_key_url }}"
-        state: present
+    #- name: Import EPEL GPG key.
+    #  rpm_key:
+    #    key: "{{ epel_repo_gpg_key_url }}"
+    #    state: present
 
-    - name: install javascript runtime
-      yum: name=nodejs state=latest
+    #- name: install javascript runtime
+    #  yum: name=nodejs state=latest
 
     - name: Install ruby
       yum:

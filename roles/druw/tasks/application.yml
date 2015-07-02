@@ -42,7 +42,7 @@
     dest="{{ application_home }}/config/solr.yml"
 
 - name: run bundle install
-  command: "cd {{ application_home }} &&bundle install --path vendor/bundle"
+  command: chdir="{{ application_home }}" bundle install --path=vendor/bundle
 
 #- name: Check development secret
 #  command: "fgrep development {{ application_home }}/config/secrets.yml"
@@ -54,17 +54,17 @@
   register: secrets_file
 
 - name: create development secret
-  command: "cd {{ application_home }} bundle exec rake secret"
+  shell: "cd {{ application_home }} bundle exec rake secret"
   register: dev_secret
   when: secrets_file.stat.exists == False
 
 - name: create test secret
-  command: "cd {{ application_home }} bundle exec rake secret"
+  shell: "cd {{ application_home }} bundle exec rake secret"
   register: test_secret
   when: secrets_file.stat.exists == False
 
 - name: create production secret
-  command: "cd {{ application_home }} bundle exec rake secret"
+  shell: "cd {{ application_home }} bundle exec rake secret"
   register: prod_secret
   when: secrets_file.stat.exists == False
 
@@ -72,7 +72,7 @@
   sudo: false
   template:
     src=secrets.yml.j2
-    dest= "/home/vagrant/uwlib-druw/config/secrets.yml"
+    dest="{{ application_home }}/config/secrets.yml"
   when: secrets_file.stat.exists == False
 
 - name: Check if development.sqlite3 exists
@@ -84,4 +84,5 @@
   when: dev_db.stat.exists == False
 
 - include: hydra-jetty.yml
+  sudo: true
   tags: "jetty"
