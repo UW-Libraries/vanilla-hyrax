@@ -20,3 +20,11 @@ ssh forwarding work around
   - after this fails somewhere around cloning druw repo edit Vagrantfile again and uncomment the above.
 
 It also fails at Create secrets.yml file correctly in the druw role, so you have to manually create them and add them to the file.
+RAILS_ENV=production bundle exec rake secret >> config/secrets.yml
+then edit
+
+rake jetty:clean
+rake sufia:jetty:config
+rake jetty:start
+
+sudo service redis start
