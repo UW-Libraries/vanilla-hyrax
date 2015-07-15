@@ -8,6 +8,22 @@
     - name: install 'Development tools' package group
       yum: name="@Development tools" state=latest
  
+    - name: Install EPEL repo. Needed for nodejs and redis
+      yum:
+        name: "{{ epel_repo_url }}"
+        state: present
+
+    - name: Import EPEL GPG key.
+      rpm_key:
+        key: "{{ epel_repo_gpg_key_url }}"
+        state: present
+
+    - name: install redis and javascript runtime
+      yum: name={{ item }} state=latest
+      with_items:
+        - nodejs
+        - redis
+
     - name: install more dependencies
       yum: name={{ item }} state=latest
       with_items:
@@ -26,7 +42,6 @@
         - make
         - patch
         - java-1.8.0-openjdk-headless.x86_64
-        - redis
 
     - name: install ruby dependencies
       yum: name={{ item }} state=latest
@@ -35,19 +50,6 @@
         - libffi-devel
         - gdbm
         - gdbm-devel
-
-    #- name: Install EPEL repo. Needed to for nodejs
-    #  yum:
-    #    name: "{{ epel_repo_url }}"
-    #    state: present
-
-    #- name: Import EPEL GPG key.
-    #  rpm_key:
-    #    key: "{{ epel_repo_gpg_key_url }}"
-    #    state: present
-
-    #- name: install javascript runtime
-    #  yum: name=nodejs state=latest
 
     - name: Install ruby
       yum:
