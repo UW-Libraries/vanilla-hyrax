@@ -9,6 +9,7 @@
     dest={{ application_home }}
     accept_hostkey=true
     version=master
+    update=no
 
 - name: create blacklight.yml
   template:

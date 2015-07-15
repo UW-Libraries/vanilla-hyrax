@@ -9,9 +9,11 @@ Vagrant.configure(2) do |config|
   config.vm.box = "chef/centos-7.0"
 
   config.vm.network "forwarded_port", guest:80, host: 8080
+  config.vm.network "forwarded_port", guest:3000, host: 3000
+  config.vm.network "forwarded_port", guest:8983, host: 8983
 
-  #config.ssh.private_key_path = "~/.ssh/id_rsa"
-  #config.ssh.forward_agent = true
+  config.ssh.private_key_path = "~/.ssh/id_rsa"
+  config.ssh.forward_agent = true
 
   config.vm.provision :ansible do |ansible|
     ansible.playbook = "playbook.yml"
