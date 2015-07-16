@@ -11,6 +11,7 @@ and
 eg. ln -s Vagrantfile.win Vagrantfile
 
   - Copy and edit vars.yml.template  
+    - cp vars.yml.template vars.yml
     - Replace application_repo path
 
 ssh forwarding work around  
@@ -27,4 +28,10 @@ rake jetty:clean
 rake sufia:jetty:config  
 rake jetty:start  
 
-sudo service redis start
+sudo service redis start  
+
+RAILS_ENV=development bundle exec rake db:migrate  
+
+bundle exec resque-pool --daemon --environment development start  
+
+RAILS_ENV=development rails server
