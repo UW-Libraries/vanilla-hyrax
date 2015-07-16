@@ -1,10 +1,10 @@
-tcdev_name: tomcat
-tcdev_port: 8080
+tcdev_name: localhost
+tcdev_port: 8983
 tcprod_name: tomcat-p
 tcprod_port: 8080
 solr_collection: druw
 devdb_name: db/development.sqlite3
 proddb_name: db/production.sqlite3
 testdb_name: db/test.sqlite3
-redis_container: redis
+redis_container: localhost
 thing2: 'is this?'
