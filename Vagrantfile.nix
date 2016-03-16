@@ -6,7 +6,8 @@
 # backwards compatibility). Please don't change it unless you know what
 # you're doing.
 Vagrant.configure(2) do |config|
-  config.vm.box = "chef/centos-7.0"
+  #config.vm.box = "chef/centos-7.0"
+  config.vm.box = "centos/7"
 
   config.vm.network "forwarded_port", guest:80, host: 8080
   config.vm.network "forwarded_port", guest:3000, host: 3000
@@ -14,6 +15,11 @@ Vagrant.configure(2) do |config|
 
   #config.ssh.private_key_path = "~/.ssh/id_rsa"
   config.ssh.forward_agent = true
+
+  config.vm.provider "virtualbox" do |v|
+    v.memory = "2048"
+    #v.memory = "3072"
+  end
 
   config.vm.provision :ansible do |ansible|
     ansible.playbook = "playbook.yml"

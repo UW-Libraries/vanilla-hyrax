@@ -7,12 +7,15 @@
   - yum: pkg={{ item }} state=latest
     with_items:
       - clamav
+      - coreutils
+      - gcc-c++
+      - GraphicsMagick
       - ImageMagick-devel
-      - nodejs
-      - poppler-utils
       - libreoffice-headless
       - libreoffice
-      - GraphicsMagick
+      - nodejs
+      - poppler-utils
+      - sqlite-devel
 
   - include: application.yml
     sudo: false
