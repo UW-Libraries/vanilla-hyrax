@@ -37,4 +37,7 @@
   command: "bundle install --path vendor/bundle chdir={{ application_home }} creates={{ application_home }}/vendor/bundle"
 
 - name: Initial sufia install
-  command: "rails generate sufia:install -f chdir={{ application_home }}"
+  command: "rails generate sufia:install -f chdir={{ application_home }} creates={{ application_home }}/app/models/user.rb"
+
+- name: Rake db
+  command: "rake db:migrate chdir={{ application_home }}"
