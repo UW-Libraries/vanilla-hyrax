@@ -51,11 +51,9 @@
   gem: fcrepo_wrapper state=latest user_install=no
 
 - name: Start solr
-  sudo: true
   command: "solr_wrapper -d solr/config/ --collection_name hydra-development & chdir={{ application_home }}"
 
 - name: Start FCRepo
-  sudo: true
   command: "fcrepo_wrapper -p 8984 & chdir={{ application_home }}"
 
 - name: Start rails webrick server
