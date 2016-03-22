@@ -1,3 +1,43 @@
+# Prerequisites:
+ - Vagrant
+ - Virtualbox
+
+# Install centos 7 virtualbox image
+`vagrant box add centos/7 https://atlas.hashicorp.com/centos/boxes/7`
+
+# Check that it has installed
+`vagrant box list`
+
+and you should see 'centos/7' listed
+
+# Clone this repo and the galaxy branch
+`git clone git@bitbucket.org:younga3/vagrant-ansible-sufia.git`   
+then   
+`git fetch && git checkout galaxy`
+
+# Copy vars.yml.template to vars.yml
+`cp vars.yml.template vars.yml`
+
+# Start your vagrant box
+`vagrant up --provider virtualbox`
+
+# ssh into vagrant box
+`vagrant ssh`
+
+# cd into sync/ dir and run ansible playbook
+`cd sync`   
+`ansible-playbook -i inventory playbook.yml`
+
+* You will probably have to start the last three commands manually 
+ from the application_home dir, after ansible fails to run all the way through for now.   
+`cd /home/vagrant/uwlib-druw`   
+`solr_wrapper -d solr/config/ --collection_name hydra-development &`   
+`fcrepo_wrapper -p 8984 &`   
+`rails server -b 0.0.0.0`
+
+=============
+Archive
+==========
 Prerequisites:
   - Fork uwlib/druw
   - Add deploy key to your fork

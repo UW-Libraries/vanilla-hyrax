@@ -1,11 +1,1 @@
-application_repo: /path/to/your/repo
-application_home: ~/vagrant/uwlib-druw
-production_host: localhost':'3000
-development_host: localhost
-test_host: localhost
-development_port: 3000
-test_port: 3000
-document_root: /vagrant                                                                     
-ansible_distribution_major_version: 7                                                       
-epel_repo_url: "http://download.fedoraproject.org/pub/epel/epel-release-latest-{{ ansible_distribution_major_version }}.noarch.rpm"                                                         
-epel_repo_gpg_key_url: "/etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-{{ ansible_distribution_major_version }}"           
+application_home: /home/vagrant/uwlib-druw
