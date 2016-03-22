@@ -40,4 +40,23 @@
   command: "rails generate sufia:install -f chdir={{ application_home }} creates={{ application_home }}/app/models/user.rb"
 
 - name: Rake db
-  command: "rake db:migrate chdir={{ application_home }}"
+  command: "rake db:migrate chdir={{ application_home }} creates={{ application_home }}/db/development.sqlite2"
+
+- name: kludge. Install solr_wrapper 
+  sudo: true
+  gem: solr_wrapper state=latest user_install=no
+
+- name: kludge. Install fcrepo_wrapper
+  sudo: true
+  gem: fcrepo_wrapper state=latest user_install=no
+
+- name: Start solr
+  sudo: true
+  command: "solr_wrapper -d solr/config/ --collection_name hydra-development & chdir={{ application_home }}"
+
+- name: Start FCRepo
+  sudo: true
+  command: "fcrepo_wrapper -p 8984 & chdir={{ application_home }}"
+
+- name: Start rails webrick server
+  command: "rails server -b 0.0.0.0 chdir={{ application_home }}"
