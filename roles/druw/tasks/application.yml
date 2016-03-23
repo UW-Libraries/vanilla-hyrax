@@ -44,6 +44,9 @@
 - name: Initial sufia install
   command: "rails generate sufia:install -f chdir={{ application_home }} creates={{ application_home }}/app/models/user.rb"
 
+- name: Set up admin users
+  command: "rails generate roles chdir={{ application_home }} creates={{ application_home }}/app/models/user.rb"
+
 - name: kludge. Install solr_wrapper 
   sudo: true
   gem: name=solr_wrapper state=latest user_install=no
