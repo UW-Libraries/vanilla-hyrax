@@ -12,7 +12,7 @@ and you should see 'centos/7' listed
 
 # Clone this repo and the galaxy branch
 `git clone git@bitbucket.org:younga3/vagrant-ansible-sufia.git`   
-then   
+then cd into repo      
 `git fetch && git checkout galaxy`
 
 # Copy vars.yml.template to vars.yml
