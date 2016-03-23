@@ -33,28 +33,31 @@
 #- name: Install gems from Gemfile
 #  bundler: state=present chdir={{ application_home }} gemfile="{{ application_home }}/Gemfile"
 
+- name: Bundle update
+  command: "bundle update --path vendor/bundle chdir={{ application_home }}"
+
 - name: Bundle install
   command: "bundle install --path vendor/bundle chdir={{ application_home }} creates={{ application_home }}/vendor/bundle"
 
 - name: Initial sufia install
   command: "rails generate sufia:install -f chdir={{ application_home }} creates={{ application_home }}/app/models/user.rb"
 
-- name: Rake db
-  command: "rake db:migrate chdir={{ application_home }} creates={{ application_home }}/db/development.sqlite2"
-
 - name: kludge. Install solr_wrapper 
   sudo: true
-  gem: solr_wrapper state=latest user_install=no
+  gem: name=solr_wrapper state=latest user_install=no
 
 - name: kludge. Install fcrepo_wrapper
   sudo: true
-  gem: fcrepo_wrapper state=latest user_install=no
+  gem: name=fcrepo_wrapper state=latest user_install=no
 
-- name: Start solr
-  command: "solr_wrapper -d solr/config/ --collection_name hydra-development & chdir={{ application_home }}"
+- name: Rake db
+  command: "rake db:migrate chdir={{ application_home }} creates={{ application_home }}/db/development.sqlite3"
 
-- name: Start FCRepo
-  command: "fcrepo_wrapper -p 8984 & chdir={{ application_home }}"
+#- name: Start solr
+#  command: "solr_wrapper -d solr/config/ --collection_name hydra-development & chdir={{ application_home }}"
 
-- name: Start rails webrick server
-  command: "rails server -b 0.0.0.0 chdir={{ application_home }}"
+#- name: Start FCRepo
+#  command: "fcrepo_wrapper -p 8984 & chdir={{ application_home }}"
+
+#- name: Start rails webrick server
+#  command: "rails server -b 0.0.0.0 chdir={{ application_home }}"
