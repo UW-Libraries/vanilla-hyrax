@@ -3,7 +3,7 @@
     yum: name=redis state=present
 
   - name: start redis
-    service: name: redis enabled=yes state=started
+    service: name=redis enabled=yes state=started
 
   - name: start resque
     command: "bundle exec resque-pool --daemon --environment development start chdir={{ application_home }}"
