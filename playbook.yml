@@ -7,5 +7,5 @@
 
   roles:
     - fits
-    - resque
     - druw
+    - resque

@@ -36,8 +36,12 @@ then cd into repo
 * Start FCRepo - your fedora project instance   
 `fcrepo_wrapper -p 8984 &`   
 * Background resque workers should have already been started by ansible.   
-* Start development rails server
+* Start development rails server   
 `rails server -b 0.0.0.0`
+
+# Create admin user
+Follow the instructions on the main hydra sufia github page under admin users.   
+https://github.com/projecthydra/sufia
 
 =============
 Archive
