@@ -6,5 +6,5 @@ sudo yum -y install ansible
 
 #ansible-galaxy install -p ~/sync/roles rvm_io.rmv1-ruby
 
-cd /home/vagrant/sync
-ansible-playbook -i inventory playbook.yml
+#cd /home/vagrant/sync
+#ansible-playbook -i inventory playbook.yml
