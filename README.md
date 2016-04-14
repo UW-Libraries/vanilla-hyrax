@@ -28,11 +28,15 @@ then cd into repo
 `cd sync`   
 `ansible-playbook -i inventory playbook.yml`
 
-* You will probably have to start the last three commands manually 
+* You will probably have to start the following three commands manually 
  from the application_home dir, after ansible fails to run all the way through for now.   
 `cd /home/vagrant/uwlib-druw`   
+* Start development solr   
 `solr_wrapper -d solr/config/ --collection_name hydra-development &`   
+* Start FCRepo - your fedora project instance   
 `fcrepo_wrapper -p 8984 &`   
+* Background resque workers should have already been started by ansible.   
+* Start development rails server
 `rails server -b 0.0.0.0`
 
 =============
