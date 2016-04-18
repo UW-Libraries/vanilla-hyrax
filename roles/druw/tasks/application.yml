@@ -44,15 +44,11 @@
 - name: Initial sufia install
   command: "rails generate sufia:install -f chdir={{ application_home }} creates={{ application_home }}/app/models/user.rb"
 
-- name: solr kludge to make this run in solr 6
-  command: "find /home/vagrant/uwlib-druw -name schema.xml -exec sed -i 's/\bunits\b/distanceUnits/g' {} \\;"
+- name: solr kludge
+  template: src=kludge.sh.j2 dest="{{ application_home }}/kludge.sh" mode="u=rwx"
 
-- name: solr kludge continued
-  command: "bundle install --path vendor/bundle chdir={{ application_home }} creates={{ application_home }}/vendor/bundle"
-
-- name: config.fits kludge
-  command: "sed -i 's/config.fits_path = \"fits\"//g' /home/vagrant/uwlib-druw/config/initializers/sufia.rb"
-
+- name: run kludge
+  command: "/home/vagrant/uwlib-druw/kludge.sh"
 
 - name: Set up admin users
   command: "rails generate roles chdir={{ application_home }} creates={{ application_home }}/app/models/user.rb"
