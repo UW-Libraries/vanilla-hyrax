@@ -16,6 +16,10 @@ and you should see 'centos/7' listed
 # Copy vars.yml.template to vars.yml
 `cp vars.yml.template vars.yml`
 
+# Windows users
+Kate says to use cygwin and edit the following gem in Vagrant   
+https://github.com/mitchellh/vagrant/issues/6702#issuecomment-166503021
+
 # Start your vagrant box
 `vagrant up --provider virtualbox`
 
