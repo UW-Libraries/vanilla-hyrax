@@ -28,7 +28,7 @@ then cd into repo
 `cd sync`   
 `ansible-playbook -i inventory playbook.yml`
 
-* You will probably have to start the following three commands manually 
+* You will probably have to start the following commands manually. You will probably also have to hit enter to return your prompt after each service starts up. 
  from the application_home dir, after ansible fails to run all the way through for now.   
 `cd /home/vagrant/uwlib-druw`   
 * Start development solr   
@@ -36,8 +36,8 @@ then cd into repo
 * Start FCRepo - your fedora project instance   
 `fcrepo_wrapper -p 8984 &`   
 * Background resque workers should have already been started by ansible.   
-* Start development rails server   
-`rails server -b 0.0.0.0`
+* Start development rails server (needs to start as sudo until I figure out perms)   
+`sudo rails server -b 0.0.0.0`
 
 # Create admin user
 Follow the instructions on the main hydra sufia github page under admin users.   
