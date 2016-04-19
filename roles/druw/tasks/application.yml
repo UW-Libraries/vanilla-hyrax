@@ -3,87 +3,72 @@
   sudo: true
   yum: name=git state=present
 
-- name: git checkout druw
-  git:
-    repo={{ application_repo }}
-    dest={{ application_home }}
-    accept_hostkey=true
-    version=master
-    update=no
+#- name: git checkout druw
+#  git:
+#    repo={{ application_repo }}
+#    dest={{ application_home }}
+#    accept_hostkey=true
+#    version=master
+#    update=no
 
-- name: create blacklight.yml
-  template:
-    src=blacklight.yml.j2
-    dest="{{ application_home }}/config/blacklight.yml"
-
-#- name: create browse_everything_providers.yml
-#  sudo: false
-#  template:
-#    src=browse_everything_providers.yml.j2
-#    dest="{{ application_home }}/config/browse_everything_providers.yml"
-
-- name: create database.yml
-  template:
-    src=database.yml.j2
-    dest="{{ application_home }}/config/database.yml"
-
-- name: create fedora.yml
-  template:
-    src=fedora.yml.j2
-    dest="{{ application_home }}/config/fedora.yml"
-
-- name: create redis.yml
-  template:
-    src=redis.yml.j2
-    dest="{{ application_home }}/config/redis.yml"
-
-- name: create solr.yml
-  template:
-    src=solr.yml.j2
-    dest="{{ application_home }}/config/solr.yml"
-
-- name: run bundle install
-  command: chdir="{{ application_home }}" bundle install --path=vendor/bundle
-
-#- name: Check development secret
-#  command: "fgrep development {{ application_home }}/config/secrets.yml"
-#  register: devkey
-#  ignore_errors: True
-
-- name: Check if secrets.yml exists
-  stat: path="{{ application_home }}/config/secrets.yml"
-  register: secrets_file
-
-- name: create development secret
-  shell: "cd {{ application_home }} bundle exec rake secret"
-  register: dev_secret
-  when: secrets_file.stat.exists == False
-
-- name: create test secret
-  shell: "cd {{ application_home }} bundle exec rake secret"
-  register: test_secret
-  when: secrets_file.stat.exists == False
-
-- name: create production secret
-  shell: "cd {{ application_home }} bundle exec rake secret"
-  register: prod_secret
-  when: secrets_file.stat.exists == False
-
-- name: create secrets.yml
-  sudo: false
-  template:
-    src=secrets.yml.j2
-    dest="{{ application_home }}/config/secrets.yml"
-  when: secrets_file.stat.exists == False
-
-- name: Check if development.sqlite3 exists
-  stat: path="{{ application_home }}/db/development.sqlite3"
-  register: dev_db
-
-- name: Create development.sqlite3
-  command: "cd {{ application_home }} bundle exec rake db:migrate"
-  when: dev_db.stat.exists == False
-
-- include: hydra-jetty.yml
+- name: install ruby
   sudo: true
-  tags: "jetty"
+  yum: name=https://github.com/feedforce/ruby-rpm/releases/download/2.3.0/ruby-2.3.0-1.el7.centos.x86_64.rpm
+
+- name: install rails
+  sudo: true
+  gem: name=rails state=latest user_install=no
+
+- name: Check if Rails app exists.
+  stat: "path={{ application_home }}"
+  register: rails_app
+
+- name: Create new rails app
+  shell: "rails new {{ application_home }} chdir=~/sync creates={{ application_home }}/Gemfile"
+  when: rails_app.stat.exists == false
+
+- name: Copy Gemfile
+  template: src=Gemfile.j2 dest="{{ application_home }}/Gemfile"
+
+#- name: Install gems from Gemfile
+#  bundler: state=present chdir={{ application_home }} gemfile="{{ application_home }}/Gemfile"
+
+- name: Bundle install
+  command: "bundle install --path vendor/bundle chdir={{ application_home }} creates={{ application_home }}/vendor/bundle"
+
+# when bundle install fails
+# run bundle update 
+# then re-run bundle install --path vendor/bundle
+# And continue
+
+- name: Initial sufia install
+  command: "rails generate sufia:install -f chdir={{ application_home }} creates={{ application_home }}/app/models/user.rb"
+
+- name: solr kludge
+  template: src=kludge.sh.j2 dest="{{ application_home }}/kludge.sh" mode="u=rwx"
+
+- name: run kludge
+  command: "/home/vagrant/uwlib-druw/kludge.sh"
+
+- name: Set up admin users
+  command: "rails generate roles chdir={{ application_home }} creates={{ application_home }}/app/models/user.rb"
+
+- name: kludge. Install solr_wrapper 
+  sudo: true
+  gem: name=solr_wrapper state=latest user_install=no
+
+- name: kludge. Install fcrepo_wrapper
+  sudo: true
+  gem: name=fcrepo_wrapper state=latest user_install=no
+
+- name: Rake db
+  command: "rake db:migrate chdir={{ application_home }} creates={{ application_home }}/db/development.sqlite3"
+        
+#- name: Start solr
+#  command: "solr_wrapper -d solr/config/ --collection_name hydra-development & chdir={{ application_home }}"
+
+#- name: Start FCRepo
+#  command: "fcrepo_wrapper -p 8984 & chdir={{ application_home }}"
+
+#- name: Start rails webrick server
+#  command: "rails server -b 0.0.0.0 chdir={{ application_home }}"

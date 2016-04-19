@@ -1,5 +1,15 @@
-  - name: copy init script
-    template: src=pool_q dest=/etc/rc.d/init.d/resque-pool mode=0755
+---
+  - name: install redis
+    yum: name=redis state=present
+
+  - name: start redis
+    service: name=redis enabled=yes state=started
 
   - name: start resque
-    service: name=resque-pool state=started enabled=yes 
+    command: "bundle exec resque-pool --daemon --environment development start chdir={{ application_home }}"
+  
+  #- name: copy init script
+  #  template: src=pool_q dest=/etc/rc.d/init.d/resque-pool mode=0755
+
+  #- name: start resque
+  #  service: name=resque-pool state=started enabled=yes 

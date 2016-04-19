@@ -7,18 +7,21 @@
   - yum: pkg={{ item }} state=latest
     with_items:
       - clamav
+      - coreutils
+      - gcc-c++
+      - GraphicsMagick
       - ImageMagick-devel
-      - nodejs
-      - poppler-utils
       - libreoffice-headless
       - libreoffice
-      - GraphicsMagick
+      - nodejs
+      - poppler-utils
+      - sqlite-devel
 
   - include: application.yml
     sudo: false
 
-  - name: give your system access to fits
-    lineinfile:
-      dest: '{{ application_home }}/config/initializers/sufia.rb'
-      insertafter: '^ # config.fits_path = \"fits.sh\"'
-      line: '   config.fits_path = "fits"'
+    #- name: give your system access to fits
+    #lineinfile:
+    #  dest: '{{ application_home }}/config/initializers/sufia.rb'
+    #  insertafter: '^ # config.fits_path = \"fits.sh\"'
+    #  line: '   config.fits_path = "fits"'

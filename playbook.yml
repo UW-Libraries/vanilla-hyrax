@@ -1,0 +1,11 @@
+---
+- name: A play that runs on the ansible host
+  hosts: 127.0.0.1
+  sudo: true
+  vars_files:
+    - vars.yml
+
+  roles:
+    - fits
+    - druw
+    - resque

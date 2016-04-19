@@ -1,0 +1,11 @@
+#! /bin/bash
+
+find /home/vagrant/uwlib-druw -name schema.xml -exec sed -i 's/\bunits\b/distanceUnits/g' {} \;
+
+#grep 'config.fits_path' /home/vagrant/uwlib-druw/config/initializers/sufia.rb
+cp /home/vagrant/uwlib-druw/config/initializers/sufia.rb{,.pre}
+sed -i '/config.fits_path/d' /home/vagrant/uwlib-druw/config/initializers/sufia.rb
+#grep 'config.fits_path' /home/vagrant/uwlib-druw/config/initializers/sufia.rb
+
+#cd /home/vagrant/uwlib-druw
+#bundle install --path vendor/bundle

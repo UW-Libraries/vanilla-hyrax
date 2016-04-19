@@ -4,8 +4,7 @@ sudo yum -y update
 sudo yum -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
 sudo yum -y install ansible
 
-#mv /vagrant/inventory ~/vagrant/inventory
+#ansible-galaxy install -p ~/sync/roles rvm_io.rmv1-ruby
 
-#cd ~/vagrant
-#ln -s /vagrant/playbook.yml.localhost playbook.yml
-
+#cd /home/vagrant/sync
+#ansible-playbook -i inventory playbook.yml

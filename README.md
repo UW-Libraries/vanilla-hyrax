@@ -1,3 +1,51 @@
+# Prerequisites:
+ - Vagrant
+ - Virtualbox
+
+# Install centos 7 virtualbox image
+`vagrant box add centos/7 https://atlas.hashicorp.com/centos/boxes/7`
+
+# Check that it has installed
+`vagrant box list`
+
+and you should see 'centos/7' listed
+
+# Clone this repo and the galaxy branch
+`git clone git@bitbucket.org:younga3/vagrant-ansible-sufia.git`   
+then cd into repo      
+`git fetch && git checkout galaxy`
+
+# Copy vars.yml.template to vars.yml
+`cp vars.yml.template vars.yml`
+
+# Start your vagrant box
+`vagrant up --provider virtualbox`
+
+# ssh into vagrant box
+`vagrant ssh`
+
+# cd into sync/ dir and run ansible playbook
+`cd sync`   
+`ansible-playbook -i inventory playbook.yml`
+
+* You will probably have to start the following commands manually. You will probably also have to hit enter to return your prompt after each service starts up. 
+ from the application_home dir, after ansible fails to run all the way through for now.   
+`cd /home/vagrant/uwlib-druw`   
+* Start development solr   
+`solr_wrapper -d solr/config/ --collection_name hydra-development &`   
+* Start FCRepo - your fedora project instance   
+`fcrepo_wrapper -p 8984 &`   
+* Background resque workers should have already been started by ansible.   
+* Start development rails server (needs to start as sudo until I figure out perms)   
+`sudo rails server -b 0.0.0.0`
+
+# Create admin user
+Follow the instructions on the main hydra sufia github page under admin users.   
+https://github.com/projecthydra/sufia
+
+=============
+Archive
+==========
 Prerequisites:
   - Fork uwlib/druw
   - Add deploy key to your fork
