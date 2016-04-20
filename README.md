@@ -11,7 +11,7 @@
 and you should see 'centos/7' listed
 
 # Clone this repo
-`git clone git@bitbucket.org:younga3/vagrant-ansible-sufia.git`   
+`git@bitbucket.org:uwlib/vagrant-ansible-sufia.git`
 
 # Copy vars.yml.template to vars.yml
 `cp vars.yml.template vars.yml`
