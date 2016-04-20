@@ -45,6 +45,13 @@ https://github.com/mitchellh/vagrant/issues/6702#issuecomment-166503021
 Follow the instructions on the main hydra sufia github page under admin users.   
 https://github.com/projecthydra/sufia
 
+ - First create a user from your browser at localhost:3000
+ - Open another terminal and vagrant ssh in: `vagrant ssh `
+ - Go to your application_home: `cd [yourapplicationhome]`
+ - Start a rails console: `RAILS_ENV=development bundle exec rails c`
+ - Search or scroll down to "Adding an admin user" in that github page mentioned above.
+ - Follow those directions.
+
 =============
 Archive
 ==========
