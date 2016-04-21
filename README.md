@@ -23,7 +23,7 @@ Kate says to use cygwin and edit the following gem in Vagrant
 https://github.com/mitchellh/vagrant/issues/6702#issuecomment-166503021
 
 The path for the gem file on Windows is likely:
-```C:\HashiCrop\Vagrant\embedded\gems\gems\vagrant-1.8.1\plugins\synced_folders\rsync```
+```C:\HashiCorp\Vagrant\embedded\gems\gems\vagrant-1.8.1\plugins\synced_folders\rsync```
 That will change/differ depending on your version of Vagrant.
 
 # Start your vagrant box
