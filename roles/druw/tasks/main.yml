@@ -9,6 +9,7 @@
       - clamav
       - coreutils
       - gcc-c++
+      - git
       - GraphicsMagick
       - ImageMagick-devel
       - libreoffice-headless

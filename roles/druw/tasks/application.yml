@@ -1,7 +1,4 @@
 ---
-- name: install git
-  sudo: true
-  yum: name=git state=present
 
 #- name: git checkout druw
 #  git:
@@ -12,12 +9,12 @@
 #    update=no
 
 - name: install ruby
-  sudo: true
-  yum: name=https://github.com/feedforce/ruby-rpm/releases/download/2.3.0/ruby-2.3.0-1.el7.centos.x86_64.rpm
+  become: true
+  yum: name=https://github.com/feedforce/ruby-rpm/releases/download/2.3.1/ruby-2.3.1-1.el7.centos.x86_64.rpm
 
 - name: install rails
-  sudo: true
-  gem: name=rails state=latest user_install=no
+  become: true
+  gem: name=rails version=4.2.6 user_install=no
 
 - name: Check if Rails app exists.
   stat: "path={{ application_home }}"
@@ -27,42 +24,34 @@
   shell: "rails new {{ application_home }} chdir=~/sync creates={{ application_home }}/Gemfile"
   when: rails_app.stat.exists == false
 
-- name: Copy Gemfile
-  template: src=Gemfile.j2 dest="{{ application_home }}/Gemfile"
+- name: Ensure that sufia gem is in Gemfile
+  lineinfile: "dest={{ application_home }}/Gemfile line=\"gem 'sufia', git: 'https://github.com/projecthydra/sufia.git', branch: 'master'\""
 
 #- name: Install gems from Gemfile
-#  bundler: state=present chdir={{ application_home }} gemfile="{{ application_home }}/Gemfile"
+#  bundler: "chdir={{ application_home }} gemfile={{ application_home }}/Gemfile gem_path=vendor/bundle state=present"
 
 - name: Bundle install
   command: "bundle install --path vendor/bundle chdir={{ application_home }} creates={{ application_home }}/vendor/bundle"
 
-# when bundle install fails
-# run bundle update 
-# then re-run bundle install --path vendor/bundle
-# And continue
-
 - name: Initial sufia install
   command: "rails generate sufia:install -f chdir={{ application_home }} creates={{ application_home }}/app/models/user.rb"
 
-- name: solr kludge
-  template: src=kludge.sh.j2 dest="{{ application_home }}/kludge.sh" mode="u=rwx"
-
-- name: run kludge
-  command: "/home/vagrant/uwlib-druw/kludge.sh"
+- name: Generate primary work type
+  command: "rails generate sufia:work Work chdir={{ application_home }} creates={{ application_home }}/spec/models/work_spec.rb"
 
 - name: Set up admin users
   command: "rails generate roles chdir={{ application_home }} creates={{ application_home }}/app/models/user.rb"
 
-- name: kludge. Install solr_wrapper 
-  sudo: true
+- name: kludge. Install solr_wrapper for dev
+  become: true
   gem: name=solr_wrapper state=latest user_install=no
 
-- name: kludge. Install fcrepo_wrapper
-  sudo: true
+- name: kludge. Install fcrepo_wrapper for dev
+  become: true
   gem: name=fcrepo_wrapper state=latest user_install=no
 
 - name: Rake db
-  command: "rake db:migrate chdir={{ application_home }} creates={{ application_home }}/db/development.sqlite3"
+  command: "rake db:migrate RAILS_ENV=development chdir={{ application_home }}  reates={{ application_home }}/db/development.sqlite3"
         
 #- name: Start solr
 #  command: "solr_wrapper -d solr/config/ --collection_name hydra-development & chdir={{ application_home }}"

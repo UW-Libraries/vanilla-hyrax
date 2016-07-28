@@ -5,8 +5,8 @@
   - name: start redis
     service: name=redis enabled=yes state=started
 
-  - name: start resque
-    command: "bundle exec resque-pool --daemon --environment development start chdir={{ application_home }}"
+  #- name: start resque
+  #  command: "bundle exec resque-pool --daemon --environment development start chdir={{ application_home }}"
   
   #- name: copy init script
   #  template: src=pool_q dest=/etc/rc.d/init.d/resque-pool mode=0755
