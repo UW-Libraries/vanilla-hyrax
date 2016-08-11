@@ -40,9 +40,9 @@ That will change/differ depending on your version of Vagrant.
  from the application_home dir, after ansible fails to run all the way through for now.   
 `cd /home/vagrant/uwlib-druw`   
 * Start development solr   
-`solr_wrapper -d solr/config/ --collection_name hydra-development &`   
+`bundle exec solr_wrapper -d solr/config/ --collection_name hydra-development &`   
 * Start FCRepo - your fedora project instance   
-`fcrepo_wrapper -p 8984 &`   
+`bundle exec fcrepo_wrapper -p 8984 &`   
 * Background resque workers should have already been started by ansible.   
 * Start development rails server (needs to start as sudo until I figure out perms)   
 `sudo rails server -b 0.0.0.0`
