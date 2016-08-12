@@ -43,7 +43,7 @@
   command: "rails generate roles chdir={{ application_home }} creates={{ application_home }}/app/models/user.rb"
 
 - name: Rake db
-  command: "rake db:migrate RAILS_ENV=development chdir={{ application_home }}  creates={{ application_home }}/db/development.sqlite3"
+  command: "bundle exec rake db:migrate RAILS_ENV=development chdir={{ application_home }}  creates={{ application_home }}/db/schema.rb"
         
 #- name: Start solr
 #  command: "bundle exec solr_wrapper -d solr/config/ --collection_name hydra-development & chdir={{ application_home }}"
