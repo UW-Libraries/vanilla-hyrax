@@ -18,6 +18,8 @@ Vagrant.configure(2) do |config|
     v.memory = "2048"
   end
 
+  config.vm.synced_folder "", "/vagrant"
+
   config.vm.provision :shell, :path => "install-ansible.sh"
   
   #if which('ansible-playbook')

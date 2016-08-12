@@ -4,25 +4,25 @@
   package: name=unzip state=present
 
 - name: unpack fits
-  unarchive: src=fits-0.8.5.zip dest={{ install_path }}/ creates={{ install_path }}/fits-{{ fits_version }}/fits.sh copy=no
+  unarchive: src=roles/fits/files/fits-0.8.5.zip dest="{{ install_path }}/" creates="{{ install_path }}/fits-{{ fits_version }}/fits.sh" copy=no
 
 - name: make fits executable
-  file: path={{ install_path }}/fits-{{ fits_version }}/fits.sh mode=0755
+  file: path="{{ install_path }}/fits-{{ fits_version }}/fits.sh" mode=0755
 
 - name: make fits-env executable
-  file: path={{ install_path }}/fits-{{ fits_version }}/fits-env.sh mode=0755
+  file: path="{{ install_path }}/fits-{{ fits_version }}/fits-env.sh" mode=0755
 
 - name: copy fits scripts
-  shell: cp -r {{ install_path }}/fits-{{ fits_version }} /usr/local/lib/ creates=/usr/local/lib/fits-{{ fits_version }}
+  shell: "cp -r {{ install_path }}/fits-{{ fits_version }} /usr/local/lib/ creates=/usr/local/lib/fits-{{ fits_version }}"
 
 - name: symlink fits alias
-  file: src=/usr/local/lib/fits-{{ fits_version }}/fits.sh dest=/usr/local/bin/fits state=link
+  file: src="/usr/local/lib/fits-{{ fits_version }}/fits.sh" dest="/usr/local/bin/fits" state=link
   
 - name: symlink fits.sh alias
-  file: src=/usr/local/lib/fits-{{ fits_version }}/fits.sh dest=/usr/bin/fits.sh state=link
+  file: src="/usr/local/lib/fits-{{ fits_version }}/fits.sh" dest="/usr/bin/fits.sh" state=link
 
 - name: set FITS_HOME in fits-env.sh
-  lineinfile: dest=/usr/local/lib/fits-{{ fits_version }}/fits-env.sh regexp=^FITS_HOME line=FITS_HOME="/usr/local/lib/fits-{{ fits_version }}" state=present
+  lineinfile: dest="/usr/local/lib/fits-{{ fits_version }}/fits-env.sh" regexp=^FITS_HOME line=FITS_HOME="/usr/local/lib/fits-{{ fits_version }}" state=present
 
 - name: symlink fits-env.sh alias
-  file: src=/usr/local/lib/fits-{{ fits_version }}/fits-env.sh dest=/usr/bin/fits-env.sh state=link
+  file: src="/usr/local/lib/fits-{{ fits_version }}/fits-env.sh" dest="/usr/bin/fits-env.sh" state=link
