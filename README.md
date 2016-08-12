@@ -35,8 +35,8 @@ That will change/differ depending on your version of Vagrant.
 # ssh into vagrant box
 `vagrant ssh`
 
-# cd into sync/ dir and run ansible playbook
-`cd sync`   
+# cd into /vagrant dir and run ansible playbook
+`cd /vagrant`   
 `ansible-playbook -i inventory playbook.yml`
 
 * You will probably have to start the following commands manually. You will probably also have to hit enter to return your prompt after each service starts up. 
