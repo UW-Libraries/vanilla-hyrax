@@ -12,12 +12,13 @@ On Windows, you might be given a choice between libvirt or virtualbox. Choose *v
 
 and you should see 'centos/7' listed
 
-# Clone this repo
-`git@bitbucket.org:uwlib/vagrant-ansible-sufia.git`   
+# Clone this repo, then change to repo's directory
+`git@bitbucket.org:uwlib/vagrant-ansible-sufia.git`
 
-# Change to repo's cloned directory, then
-# Copy vars.yml.template to vars.yml
 `cd vagrant-ansible-sufia`
+
+# Copy vars.yml.template to vars.ym
+
 `cp vars.yml.template vars.yml`
 
 # Windows users
