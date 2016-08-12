@@ -21,7 +21,7 @@
   register: rails_app
 
 - name: Create new rails app
-  shell: "rails new {{ application_home }} chdir=~/sync creates={{ application_home }}/Gemfile"
+  shell: "rails new {{ application_home }} chdir=/vagrant creates={{ application_home }}/Gemfile"
   when: rails_app.stat.exists == false
 
 - name: Ensure that sufia gem is in Gemfile
