@@ -1,3 +1,5 @@
+This repository should set up a development instance of Sufia v.7+ in a virtualbox configured by Vagrant.
+
 # Prerequisites:
  - Vagrant
  - Virtualbox
@@ -40,14 +42,12 @@ That will change/differ depending on your version of Vagrant.
 `cd /vagrant`   
 `ansible-playbook -i inventory playbook.yml`
 
-* You will probably have to start the following commands manually. You will probably also have to hit enter to return your prompt after each service starts up. 
- from the application_home dir, after ansible fails to run all the way through for now.   
+* You will have to start the following commands manually. You will probably also have to hit enter to return your prompt after each service starts up.   
 `cd /home/vagrant/sufia`   
 * Start development solr   
 `bundle exec solr_wrapper -d solr/config/ --collection_name hydra-development &`   
 * Start FCRepo - your fedora project instance   
 `bundle exec fcrepo_wrapper -p 8984 &`   
-* Background resque workers should have already been started by ansible.   
 * Start development rails server (needs to start as sudo until I figure out perms)   
 `sudo rails server -b 0.0.0.0`
 
