@@ -1,0 +1,59 @@
+---
+  - name: Install sufia dependencies
+    become: yes
+    yum: pkg={{ item }} state=latest
+    with_items:
+      - clamav
+      - coreutils
+      - gcc-c++
+      - git
+      - GraphicsMagick
+      - ImageMagick-devel
+      - libreoffice-headless
+      - libreoffice
+      - nodejs
+      - poppler-utils
+      - sqlite-devel
+
+  - name: install ruby
+    become: true
+    yum: name=https://github.com/feedforce/ruby-rpm/releases/download/2.3.1/ruby-2.3.1-1.el7.centos.x86_64.rpm
+
+  - name: install rails
+    become: true
+    gem: name=rails version="{{ rails_version }}" user_install=no
+
+  - name: Check if Rails app exists.
+    stat: "path={{ application_home }}"
+    register: rails_app
+
+  - name: Create new rails app
+    shell: "rails new {{ application_home }} chdir=/vagrant creates={{ application_home }}/Gemfile"
+    when: rails_app.stat.exists == false
+
+  - name: Ensure that sufia gem is in Gemfile
+    lineinfile: "dest={{ application_home }}/Gemfile line=\"gem 'sufia', git: 'https://github.com/projecthydra/sufia.git', branch: 'master'\""
+
+  - name: Bundle install
+    command: "bundle install --path vendor/bundle chdir={{ application_home }} creates={{ application_home }}/vendor/bundle"
+
+  - name: Initial sufia install
+    command: "rails generate sufia:install -f chdir={{ application_home }} creates={{ application_home }}/app/models/user.rb"
+
+  - name: Generate primary work type
+    command: "rails generate sufia:work Work chdir={{ application_home }} creates={{ application_home }}/spec/models/work_spec.rb"
+
+  - name: Set up admin users
+    command: "rails generate roles chdir={{ application_home }} creates={{ application_home }}/app/models/user.rb"
+
+  - name: Rake db
+    command: "bundle exec rake db:migrate RAILS_ENV=development chdir={{ application_home }}  creates={{ application_home }}/db/schema.rb"
+        
+  #- name: Start solr
+  #  command: "bundle exec solr_wrapper -d solr/config/ --collection_name hydra-development & chdir={{ application_home }}"
+
+  #- name: Start FCRepo
+  #  command: "bundle exec fcrepo_wrapper -p 8984 & chdir={{ application_home }}"
+
+  #- name: Start rails webrick server
+  #  command: "rails server -b 0.0.0.0 chdir={{ application_home }}"
