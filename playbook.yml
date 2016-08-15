@@ -1,6 +1,7 @@
 ---
 - name: A play that runs on the ansible host
-  hosts: 127.0.0.1
+  #hosts: 127.0.0.1
+  hosts: localhost
   vars_files:
     - vars.yml
 
