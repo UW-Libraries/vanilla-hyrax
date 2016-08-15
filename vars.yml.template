@@ -3,4 +3,4 @@ fits_version: 0.8.5
 install_path: /usr/local/bin
 rails_version: 4.2.6
 #sufia_version: master
-sufia_version: 7.1.0
+sufia_version: v7.1.0
