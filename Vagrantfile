@@ -21,17 +21,4 @@ Vagrant.configure(2) do |config|
   config.vm.synced_folder "", "/vagrant"
 
   config.vm.provision :shell, :path => "install-ansible.sh"
-  
-  #if which('ansible-playbook')
-  #  config.vm.provision "ansible" do |ansible|
-  #    ansible.playbook = "playbook.yml"
-  #  end
-  #else
-  #  config.vm.provision "ansible_local" do |ansible|
-  #    ansible.playbook = "playbook.yml"
-  #    ansible.galaxy_role_file = "requirements.yml"
-  #  end
-  #end
 end
-
-# http://www.jeffgeerling.com/blog/use-vagrant-18s-new-ansiblelocal-provisioner

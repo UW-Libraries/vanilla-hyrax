@@ -1,11 +1,11 @@
 ---
 - name: A play that runs on the ansible host
-  hosts: 127.0.0.1
-  become: true
+  #hosts: 127.0.0.1
+  hosts: localhost
   vars_files:
     - vars.yml
 
   roles:
-    - fits
-    - druw
-    - resque
+    - { role: fits, become: yes }
+    - { role: sufia }
+    - { role: redis, become: yes }
