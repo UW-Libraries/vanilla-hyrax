@@ -32,13 +32,13 @@
     when: rails_app.stat.exists == false
 
   - name: Ensure that sufia gem is in Gemfile
-    lineinfile: "dest={{ application_home }}/Gemfile line=\"gem 'sufia', git: 'https://github.com/projecthydra/sufia.git', branch: 'master'\""
+    lineinfile: "dest={{ application_home }}/Gemfile line=\"gem 'sufia', git: 'https://github.com/projecthydra/sufia.git', branch: '{{ sufia_version }}'\""
 
   - name: Bundle install
     command: "bundle install --path vendor/bundle chdir={{ application_home }} creates={{ application_home }}/vendor/bundle"
 
   - name: Initial sufia install
-    command: "rails generate sufia:install -f chdir={{ application_home }} creates={{ application_home }}/app/models/user.rb"
+    command: "rails generate sufia:install -f chdir={{ application_home }} creates={{ application_home }}/app/models/solr_document.rb"
 
   - name: Generate primary work type
     command: "rails generate sufia:work Work chdir={{ application_home }} creates={{ application_home }}/spec/models/work_spec.rb"
