@@ -15,7 +15,7 @@ On Windows, you might be given a choice between libvirt or virtualbox. Choose *v
 and you should see 'centos/7' listed
 
 # Clone this repo, then change to repo's directory
-`git@bitbucket.org:uwlib/vagrant-ansible-sufia.git`
+`git clone git@bitbucket.org:uwlib/vagrant-ansible-sufia.git`
 
 `cd vagrant-ansible-sufia`
 
