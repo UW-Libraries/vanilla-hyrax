@@ -33,18 +33,20 @@
 
   - name: Ensure that sufia gem is in Gemfile
     lineinfile: "dest={{ application_home }}/Gemfile line=\"gem 'sufia', git: 'https://github.com/projecthydra/sufia.git', branch: '{{ sufia_version }}'\""
+    #lineinfile: "dest={{ application_home }}/Gemfile line=\"gem 'sufia', git: 'https://github.com/projecthydra/sufia.git', tag: '{{ sufia_version }}'\""
+
+  - name: Kludge for Flipflop gem
+    lineinfile: "dest={{ application_home }}/Gemfile line=\"gem 'flipflop', git: 'https://github.com/jcoyne/flipflop.git', branch: 'hydra'\""
 
   - name: Bundle install
-    command: "bundle install --path vendor/bundle chdir={{ application_home }} creates={{ application_home }}/vendor/bundle"
+    #command: "bundle install --path vendor/bundle chdir={{ application_home }} creates={{ application_home }}/vendor/bundle"
+    command: "bundle install --path vendor/bundle chdir={{ application_home }}"
 
   - name: Initial sufia install
-    command: "rails generate sufia:install -f chdir={{ application_home }} creates={{ application_home }}/app/models/solr_document.rb"
+    command: "bundle exec rails generate sufia:install -f chdir={{ application_home }} creates={{ application_home }}/app/models/solr_document.rb"
 
   - name: Generate primary work type
-    command: "rails generate sufia:work Work chdir={{ application_home }} creates={{ application_home }}/spec/models/work_spec.rb"
-
-  - name: Set up admin users
-    command: "rails generate roles chdir={{ application_home }} creates={{ application_home }}/app/models/user.rb"
+    command: "bundle exec rails generate sufia:work Work chdir={{ application_home }} creates={{ application_home }}/spec/models/work_spec.rb"
 
   - name: Rake db
     command: "bundle exec rake db:migrate RAILS_ENV=development chdir={{ application_home }}  creates={{ application_home }}/db/schema.rb"

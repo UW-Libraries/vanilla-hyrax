@@ -1,0 +1,37 @@
+---
+  - name: Ensure that sufia gem is in Gemfile
+    lineinfile: "dest={{ application_home }}/Gemfile line=\"gem 'hydra-role-management'\""
+
+  - name: Bundle install
+    command: "bundle install --path vendor/bundle chdir={{ application_home }}"
+
+  - name: Check if admin users role has been created
+    stat: path="{{ application_home }}/db/migrate*_user_roles.rb"
+    register: admin_user_role
+
+  - name: Set up admin users role
+    command: "rails generate roles chdir={{ application_home }}"
+    when: admin_user_role.stat.exists == False
+
+  - name: Rake db
+    command: "bundle exec rake db:migrate RAILS_ENV=development chdir={{ application_home }}"
+
+ - name: Enable cancan abilities in ability.rb
+    lineinfile:
+      dest: "{{ application_home }}/app/models/ability.rb"
+      insertafter: "def custom_permissions"
+      line: "{{ item }}"
+    with_items:
+      - "    end"
+      - "      can [:create, :show, :add_user, :remove_user, :index, :edit, :update, :destroy], Role"
+      - "    if current_user.admin?"
+      - "    # app/models/ability.rb"
+        
+  #- name: Start solr
+  #  command: "bundle exec solr_wrapper -d solr/config/ --collection_name hydra-development & chdir={{ application_home }}"
+
+  #- name: Start FCRepo
+  #  command: "bundle exec fcrepo_wrapper -p 8984 & chdir={{ application_home }}"
+
+  #- name: Start rails webrick server
+  #  command: "rails server -b 0.0.0.0 chdir={{ application_home }}"
