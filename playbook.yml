@@ -8,4 +8,5 @@
   roles:
     - { role: fits, become: yes }
     - { role: sufia }
+    - { role: sufia_admin }
     - { role: redis, become: yes }

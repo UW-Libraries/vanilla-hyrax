@@ -1,6 +1,8 @@
 application_home: /home/vagrant/sufia
 fits_version: 0.8.5
 install_path: /usr/local/bin
-rails_version: 4.2.6
-#sufia_version: master
-sufia_version: v7.1.0
+#rails_version: 5.0.0.1
+#sufia_version: "branch: 'master'"
+rails_version: 4.2.7.1
+sufia_version: "tag: 'v7.1.0'"
+#sufia_version: "ref: '3d06cc0a705c16f4a645607321f7c9dd053f34c3'"
