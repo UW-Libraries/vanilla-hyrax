@@ -32,8 +32,8 @@
     when: rails_app.stat.exists == false
 
   - name: Ensure that sufia gem is in Gemfile
-    lineinfile: "dest={{ application_home }}/Gemfile line=\"gem 'sufia', git: 'https://github.com/projecthydra/sufia.git', branch: '{{ sufia_version }}'\""
-    #lineinfile: "dest={{ application_home }}/Gemfile line=\"gem 'sufia', git: 'https://github.com/projecthydra/sufia.git', tag: '{{ sufia_version }}'\""
+    #lineinfile: "dest={{ application_home }}/Gemfile line=\"gem 'sufia', git: 'https://github.com/projecthydra/sufia.git', branch: '{{ sufia_version }}'\""
+    lineinfile: "dest={{ application_home }}/Gemfile line=\"gem 'sufia', git: 'https://github.com/projecthydra/sufia.git', {{ sufia_version }}\""
 
   - name: Kludge for Flipflop gem
     lineinfile: "dest={{ application_home }}/Gemfile line=\"gem 'flipflop', git: 'https://github.com/jcoyne/flipflop.git', branch: 'hydra'\""

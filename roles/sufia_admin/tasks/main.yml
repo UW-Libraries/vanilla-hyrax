@@ -16,7 +16,7 @@
   - name: Rake db
     command: "bundle exec rake db:migrate RAILS_ENV=development chdir={{ application_home }}"
 
- - name: Enable cancan abilities in ability.rb
+  - name: Enable cancan abilities in ability.rb
     lineinfile:
       dest: "{{ application_home }}/app/models/ability.rb"
       insertafter: "def custom_permissions"
