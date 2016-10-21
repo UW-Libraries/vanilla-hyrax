@@ -1,9 +1,10 @@
 ---
-  - name: Ensure that sufia gem is in Gemfile
+  - name: Add hydra-role-managemnt gem to Gemfile
     lineinfile: "dest={{ application_home }}/Gemfile line=\"gem 'hydra-role-management'\""
 
   - name: Bundle install
-    command: "bundle install --path vendor/bundle chdir={{ application_home }}"
+    become: yes
+    command: "bundle install chdir={{ application_home }}"
 
   - name: Check if admin users role has been created
     stat: path="{{ application_home }}/db/migrate*_user_roles.rb"

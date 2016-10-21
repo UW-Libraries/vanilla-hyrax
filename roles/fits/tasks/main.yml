@@ -4,7 +4,9 @@
   package: name=unzip state=present
 
 - name: unpack fits
-  unarchive: src=roles/fits/files/fits-0.8.5.zip dest="{{ install_path }}/" creates="{{ install_path }}/fits-{{ fits_version }}/fits.sh" copy=no
+  unarchive: src="http://projects.iq.harvard.edu/files/fits/files/fits-0.8.5.zip" dest="{{ install_path }}/" creates="{{ install_path }}/fits-{{ fits_version }}/fits.sh" copy=no
+  #unarchive: src=roles/fits/files/fits-0.8.5.zip dest="{{ install_path }}/" creates="{{ install_path }}/fits-{{ fits_version }}/fits.sh" copy=no
+  #unarchive: src=fits-0.8.5.zip dest="{{ install_path }}/" creates="{{ install_path }}/fits-{{ fits_version }}/fits.sh" copy=no
 
 - name: make fits executable
   file: path="{{ install_path }}/fits-{{ fits_version }}/fits.sh" mode=0755

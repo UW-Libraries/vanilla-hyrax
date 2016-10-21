@@ -1,6 +1,8 @@
 application_home: /home/vagrant/sufia
 fits_version: 0.8.5
 install_path: /usr/local/bin
+ansible_target: localhost
+#ansible_target: demoserver
 #rails_version: 5.0.0.1
 #sufia_version: "branch: 'master'"
 rails_version: 4.2.7.1
