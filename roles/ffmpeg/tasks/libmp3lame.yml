@@ -1,16 +1,31 @@
-# http://trac.ffmpeg.org/wiki/CompilationGuide/Centos
+---
+- name: download libmp3lame source
+  get_url:
+    url: https://downloads.sourceforge.net/sourceforge/lame/lame-3.99.5.tar.gz
+    dest: "{{ ffmpeg_path }}/lame-3.99.5.tar.gz"
 
-  - name: get lame-3.99.5 src
-    unarchive: src=lame-3.99.5.tar.gz dest="{{ ffmpeg_sources }}"
+- name: unzip libmp3lame source
+  unarchive:
+    src: "{{ ffmpeg_path }}/lame-3.99.5.tar.gz"
+    dest: "{{ ffmpeg_path }}/"
+    creates: "{{ ffmpeg_path }}/lame-3.99.5/compile.c"
+    copy: no
 
-  - name: lame-3.99.5 config steps
-    command: chdir="{{ ffmpeg_sources }}/lame-3.99.5" {{ item }}
-    with_items: 
-      - './configure --prefix="{{ ffmpeg_build }}" --bindir="{{ bin_dir }}" --disable-shared --enable-nasm'
-   
-  - name: run make for lame-3.99.5
-    shell: chdir="{{ ffmpeg_sources }}/lame-3.99.5" {{ item }} 
-    with_items:
-      - 'make'
-      - 'make install'
-      - 'make distclean'
+- name: configure libmp3lame
+  command: ./configure --disable-shared --enable-nasm --prefix=/usr/local
+  args:
+    chdir: "{{ ffmpeg_path }}/lame-3.99.5"
+    creates: "{{ ffmpeg_path }}/lame-3.99.5/Makefile"
+
+- name: make libmp3lame
+  command: make
+  args:
+    chdir: "{{ ffmpeg_path }}/lame-3.99.5"
+
+- name: install libmp3lame
+  become: yes
+  command: make install
+  args:
+    chdir: "{{ ffmpeg_path }}/lame-3.99.5"
+
+- include: ldconfig.yml
