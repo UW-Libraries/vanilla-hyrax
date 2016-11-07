@@ -36,10 +36,9 @@
 - include: libvorbis.yml
   when: vorbis_stat.stat.exists == False
 
-- stat: path=/usr/local/lib/libvpx.a
-  register: vpx_stat
-- include: libvpx.yml
-  when: vpx_stat.stat.exists == False
+- name: Install libvpx
+  become: yes
+  yum: pkg=libvpx state=latest
 
 - stat: path=/usr/local/bin/ffmpeg
   register: ffmpeg_stat
