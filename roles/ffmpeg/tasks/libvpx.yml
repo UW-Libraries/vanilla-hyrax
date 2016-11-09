@@ -1,5 +1,0 @@
----
-- name: install libvpx rpm
-  yum: pkg=libvpx state=latest
-
-- include: ldconfig.yml
