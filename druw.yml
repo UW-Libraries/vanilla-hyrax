@@ -10,4 +10,4 @@
     - { role: druw }
     - { role: druw_admin }
     - { role: redis, become: yes }
-    #- { role: ffmpeg, become: yes }
+    - { role: ffmpeg, tags: ffmpeg }
