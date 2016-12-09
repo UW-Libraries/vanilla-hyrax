@@ -27,6 +27,10 @@
     stat: "path={{ application_home }}"
     register: rails_app
 
+  - name: Make directory for rails app
+    become: yes
+    file: owner="{{ ansible_user }}" group="{{ ansible_user }}" state=directory path="{{ application_home }}"
+
   - name: Create new rails app
     #shell: "rails new {{ application_home }} -m https://raw.githubusercontent.com/projecthydra/sufia/master/template.rb creates={{ application_home }}/Gemfile"
     #shell: "rails new {{ application_home }} -m template.rb creates={{ application_home }}/Gemfile"

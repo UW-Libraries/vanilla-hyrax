@@ -1,0 +1,28 @@
+---
+# Modified version of https://github.com/acozine/sufia-centos/blob/master/roles/hydra-stack/tasks/fedora.yml
+
+- name: download fedora repository
+  become: yes
+  get_url: url=https://repo1.maven.org/maven2/org/fcrepo/fcrepo-webapp/{{ fedora_ver }}/fcrepo-webapp-{{ fedora_ver }}.war \
+           dest={{ install_path }}/fcrepo-webapp-{{ fedora_ver }}.war
+
+- name: check fedora.war
+  stat: path={{ tomcat }}/webapps/fedora.war
+  register: fedora_war
+
+- name: copy over fedora.war
+  become: yes
+  command: cp {{ install_path }}/fcrepo-webapp-{{ fedora_ver }}.war {{ tomcat }}/webapps/fedora.war
+  when: fedora_war.stat.exists == False
+
+- name: make fedora data dir
+  become: yes
+  file: owner=tomcat group=tomcat state=directory path={{ application_home }}/fedora-data
+
+- name: create tomcat config and java options
+  become: yes
+  template: src=tomcat.conf.j2 dest=/etc/tomcat/tomcat.conf backup=yes
+
+- name: restart tomcat
+  become: yes
+  service: name=tomcat enabled=yes state=restarted
