@@ -9,12 +9,12 @@
   - name: initdb
     action: shell creates=/var/lib/pgsql/data/postgresql.conf postgresql-setup initdb
 
+  - name: start postgresql service
+    service: name=postgresql state=started enabled=true
+
   - name: replace pg_hba.conf
     template: src=pg_hba.conf.j2 dest=/var/lib/pgsql/data/pg_hba.conf
     notify: restart postgresql
-
-  - name: start postgresql service
-    service: name=postgresql state=started enabled=true
 
   - name: Check that database is created
     become_user: postgres
