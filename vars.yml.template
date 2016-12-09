@@ -1,4 +1,4 @@
-application_home: /home/vagrant/sufia
+application_home: /var/sufia
 druw_home: /home/vagrant/druw
 fits_version: 0.8.5
 install_path: /usr/local/bin
@@ -9,3 +9,4 @@ ansible_target: localhost
 rails_version: 4.2.7.1
 sufia_version: "tag: 'v7.2.0'"
 #sufia_version: "ref: '3d06cc0a705c16f4a645607321f7c9dd053f34c3'"
+config_path: "{{ application_home }}/config" 

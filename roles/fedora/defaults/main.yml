@@ -1,0 +1,4 @@
+---
+install_path: /opt
+tomcat: /usr/share/tomcat
+fedora_ver: 4.7.0

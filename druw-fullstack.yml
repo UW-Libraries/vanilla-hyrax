@@ -1,0 +1,21 @@
+---
+- name: A play that runs on the ansible host
+  hosts: "{{ ansible_target }}"
+  #hosts: localhost
+  vars_files:
+    - vars.yml
+    - private.yml
+
+  handlers:
+    - name: restart postgresql
+      service: name=postgresql state=restarted
+
+  roles:
+    - { role: fits, become: yes }
+    - { role: druw }
+    - { role: druw_admin }
+    - { role: redis, become: yes }
+    #- { role: ffmpeg, tags: ffmpeg }
+    - { role: postgresql, become: yes }
+    - { role: tomcat }
+    - { role: fedora }

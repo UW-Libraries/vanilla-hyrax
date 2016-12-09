@@ -1,0 +1,29 @@
+---
+  - name: install postgresql
+    yum: pkg={{ item }} state=latest
+    with_items:
+      - postgresql
+      - postgresql-server
+      - python-psycopg2
+
+  - name: initdb
+    action: shell creates=/var/lib/pgsql/data/postgresql.conf postgresql-setup initdb
+
+  - name: replace pg_hba.conf
+    template: src=pg_hba.conf.j2 dest=/var/lib/pgsql/data/pg_hba.conf
+    notify: restart postgresql
+
+  - name: start postgresql service
+    service: name=postgresql state=started enabled=true
+
+  - name: Check that database is created
+    become_user: postgres
+    postgresql_db: name={{ db_name }}
+
+  - name: Check that user has access to database
+    become_user: postgres
+    postgresql_user: db={{ db_name }} name={{ db_user }} password={{ db_pwd }}
+
+  - name: Check that user does not have unnecessary privilege
+    become_user: postgres
+    postgresql_user: name={{ db_user }} role_attr_flags=NOSUPERUSER,NOCREATEDB
