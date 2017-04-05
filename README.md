@@ -46,10 +46,10 @@ Edit application_home if you want it to install in someplace other than /home/va
 `sudo rails server -b 0.0.0.0`
 
 ## Check Sufia is Running
-Open a browser and go to http://localhost:3000. The initial load will take a bit (you'll see activity in SSH window as the rails server processes the request).
+Open a browser and go to http://localhost:3001. The initial load will take a bit (you'll see activity in SSH window as the rails server processes the request).
 
 ## Create a User
-Go to http://localhost:3000/users/sign_up and create a new user (you will be making this user an admin in the next step).
+Go to http://localhost:3001/users/sign_up and create a new user (you will be making this user an admin in the next step).
 
 ## Create admin user
 Follow the instructions on the main hydra sufia github page under admin users.   
