@@ -9,10 +9,10 @@ Vagrant.configure(2) do |config|
   config.vm.box = "centos/7"
 
   #config.vm.network "forwarded_port", guest:80, host: 8080
-  config.vm.network "forwarded_port", guest:8080, host: 8080
-  config.vm.network "forwarded_port", guest:3000, host: 3000
-  config.vm.network "forwarded_port", guest:8983, host: 8983
-  config.vm.network "forwarded_port", guest:8984, host: 8984
+  config.vm.network "forwarded_port", guest:8080, host: 8081
+  config.vm.network "forwarded_port", guest:3000, host: 3001
+  config.vm.network "forwarded_port", guest:8983, host: 8985
+  config.vm.network "forwarded_port", guest:8984, host: 8986
 
   config.vm.provider "virtualbox" do |v|
     #v.memory = "3072"

@@ -17,7 +17,7 @@
 
   - name: install ruby
     become: true
-    yum: name=https://github.com/feedforce/ruby-rpm/releases/download/2.3.1/ruby-2.3.1-1.el7.centos.x86_64.rpm
+    yum: name=https://github.com/feedforce/ruby-rpm/releases/download/{{ ruby_version }}/ruby-{{ ruby_version }}-1.el7.centos.x86_64.rpm
 
   - name: install rails
     become: true
@@ -27,34 +27,12 @@
     stat: "path={{ application_home }}"
     register: rails_app
 
-  - name: Make directory for rails app
-    become: yes
-    file: owner="{{ ansible_user }}" group="{{ ansible_user }}" state=directory path="{{ application_home }}"
-
   - name: Create new rails app
-    #shell: "rails new {{ application_home }} -m https://raw.githubusercontent.com/projecthydra/sufia/master/template.rb creates={{ application_home }}/Gemfile"
-    #shell: "rails new {{ application_home }} -m template.rb creates={{ application_home }}/Gemfile"
-    shell: "rails new {{ application_home }} chdir=/vagrant creates={{ application_home }}/Gemfile"
+    shell: "rails new {{ application_home }} -m https://raw.githubusercontent.com/projecthydra/sufia/master/template.rb creates={{ application_home }}/Gemfile"
     when: rails_app.stat.exists == false
-
-  - name: Add sufia gem to Gemfile
-    lineinfile: "dest={{ application_home }}/Gemfile line=\"gem 'sufia', git: 'https://github.com/projecthydra/sufia.git', {{ sufia_version }}\""
-
-  - name: Add flipflop gem to Gemfile
-    lineinfile: "dest={{ application_home }}/Gemfile line=\"gem 'flipflop', git: 'https://github.com/jcoyne/flipflop.git', branch: 'hydra'\""
-
-  - name: Bundle install
-    #command: "bundle install --path vendor/bundle chdir={{ application_home }} creates={{ application_home }}/vendor/bundle"
-    command: "bundle install chdir={{ application_home }}" 
-
-  - name: Initial sufia install
-    command: "bundle exec rails generate sufia:install -f chdir={{ application_home }} creates={{ application_home }}/app/models/solr_document.rb"
 
   - name: Generate primary work type
     command: "bundle exec rails generate sufia:work Work chdir={{ application_home }} creates={{ application_home }}/spec/models/work_spec.rb"
-
-  - name: Rake db
-    command: "bundle exec rake db:migrate RAILS_ENV=development chdir={{ application_home }}  creates={{ application_home }}/db/schema.rb"
 
   - name: whitelist the 10.0.2.2 network space in the Web Console config
     tags: whitelist
@@ -65,12 +43,3 @@
           class Application < Rails::Application
             config.web_console.whitelisted_ips = '10.0.2.2'
           end
-        
-  #- name: Start solr
-  #  command: "bundle exec solr_wrapper -d solr/config/ --collection_name hydra-development & chdir={{ application_home }}"
-
-  #- name: Start FCRepo
-  #  command: "bundle exec fcrepo_wrapper -p 8984 & chdir={{ application_home }}"
-
-  #- name: Start rails webrick server
-  #  command: "rails server -b 0.0.0.0 chdir={{ application_home }}"
