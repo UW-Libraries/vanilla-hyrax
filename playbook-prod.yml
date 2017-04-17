@@ -20,6 +20,6 @@
     - { role: tomcat }
     - { role: fedora, tags: ['fedora'] }
     - { role: solr, tags: ['solr'] }
-    - { role: configurations, become: yes, tags: ['configure'] }
+    #- { role: configurations, become: yes, tags: ['configure'] }
     - { role: apache, tags: ['apache'] }
     #- { role: ffmpeg, tags: ffmpeg }
