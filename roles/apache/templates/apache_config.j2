@@ -1,0 +1,20 @@
+<VirtualHost *:80>
+#ServerName {{ server_name }}
+ServerName localhost
+# The below line turns on serving Passenger errors to the web. Turn off in production
+PassengerFriendlyErrorPages on
+# !!! Be sure to point DocumentRoot to 'public'!
+DocumentRoot {{ application_home }}/public
+# allows forward slashes for IIIF
+AllowEncodedSlashes NoDecode
+# uses xsendfile for browser downloads
+XSendFile on
+XSendFilePath {{ application_home }}/tmp/derivatives
+  <Directory {{ application_home }}/public>
+        # MultiViews must be turned off.
+        Options -MultiViews
+        # Uncomment this if you're on Apache >= 2.4:
+        Require all granted
+        RailsEnv production
+  </Directory>
+</VirtualHost>

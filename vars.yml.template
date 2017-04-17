@@ -1,4 +1,4 @@
-application_home: /home/vagrant/sufia
+application_home: /var/sufia
 fits_version: 0.8.5
 install_path: /usr/local/bin
 ansible_target: localhost

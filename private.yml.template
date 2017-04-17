@@ -1,0 +1,8 @@
+---
+# change all these if you are acutally building production.
+fedora_pass: somefedorapassword
+db_name: fcrepodb
+db_user: fcrepouser
+db_pwd: thisthingbetterwork
+devise_secret: "9b7b558d563c97fa900effd162cb786e267abeffafea303fe8d9d9de9f6c41ec51c79342d30e9e720016fc9733045be5c777580a46503cd58f0045a1918ebfc7"
+rails_secret: '  secret_key_base: e8ecb1f2c0a0a51b64078e7aebf46802cde2167236db004a10908de4d432af940513815835d5bfb6656b0a0364df07b8ee37cc8acbd29640bec8cdf6400abb38'
