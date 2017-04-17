@@ -38,6 +38,7 @@
     command: "bundle exec rails generate sufia:work Work chdir={{ application_home }} creates={{ application_home }}/spec/models/work_spec.rb"
 
   - name: devise.rb
+    become: yes
     lineinfile:
       #path: /var/sufia/config/initializers/devise.rb'
       dest: "{{ application_home }}/config/initializers/devise.rb"
@@ -46,6 +47,7 @@
       backrefs: yes
 
   - name: Add default secret to secrets.yml
+    become: yes
     lineinfile:
       dest: "{{ application_home }}/config/secrets.yml"
       state: present
