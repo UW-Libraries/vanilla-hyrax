@@ -54,6 +54,10 @@
   become: yes
   shell: "cd {{ application_home }} && RAILS_ENV=production bundle exec rake assets:precompile"
 
+#- name: disable selinux
+#  selinux:
+#    state: disabled
+
 - name: change owner to apache
   become: yes
   file:

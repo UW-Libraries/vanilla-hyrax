@@ -28,3 +28,6 @@
 
 - name: symlink fits-env.sh alias
   file: src="/usr/local/lib/fits-{{ fits_version }}/fits-env.sh" dest="/usr/bin/fits-env.sh" state=link
+
+- name: symlink fits-env.sh alias
+  file: src="/usr/local/lib/fits-{{ fits_version }}/fits-env.sh" dest="/usr/local/bin/fits-env.sh" state=link
