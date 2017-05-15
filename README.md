@@ -23,7 +23,12 @@ and you should see 'centos/7' listed
 
 ## Copy vars.yml.template to vars.yml.
 
-`cp vars.yml.template vars.yml`   
+`cp vars.yml.template vars.yml`
+
+## Edit vars.yml as needed:
+
+* Edit application_home if you want it to install in someplace other than /home/vagrant/sufia
+* Edit sufia_version to build the appropriate version of sufia/hyrax 
 
 ## Start your vagrant box
 `vagrant up --provider virtualbox`
