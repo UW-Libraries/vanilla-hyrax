@@ -14,7 +14,8 @@
 
   roles:
     - { role: fits, become: yes }
-    - { role: sufia }
+    #- { role: sufia }
+    - { role: hyrax, become: yes }
     - { role: postgresql, become: yes, tags: ['postgres'] }
     - { role: redis, become: yes }
     - { role: tomcat }
