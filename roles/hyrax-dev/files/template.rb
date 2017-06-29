@@ -1,5 +1,5 @@
 #gem 'hyrax', '1.0.0.rc1'
-gem 'hyrax', :github => 'projecthydra-labs/hyrax', :branch => 'master'
+gem 'hyrax', :github => 'samvera/hyrax', :branch => 'master'
 
 run 'bundle install'
 

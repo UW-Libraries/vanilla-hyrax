@@ -1,5 +1,5 @@
 application_home: /var/hyrax
-fits_version: 0.8.5
+fits_version: 1.0.5
 install_path: /usr/local/bin
 ansible_target: localhost
 ruby_version: 2.4.1

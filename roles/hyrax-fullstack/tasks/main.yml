@@ -1,5 +1,5 @@
 ---
-  - name: Install sufia dependencies
+  - name: Install hyrax dependencies
     become: yes
     yum: pkg={{ item }} state=latest
     with_items:
@@ -13,6 +13,10 @@
       - libreoffice
       - nodejs
       - poppler-utils
+      - postgresql
+      - postgresql-server
+      - postgresql-devel
+      - python-psycopg2
       - sqlite-devel
 
   - name: install ruby
@@ -23,24 +27,14 @@
     become: true
     gem: name=rails version="{{ rails_version }}" user_install=no
 
-  - name: Check if Rails app exists.
-    stat: "path={{ application_home }}"
-    register: rails_app
-
   - name: Create new rails app
-    become: yes
-    shell: "rails new {{ application_home }} -m https://raw.githubusercontent.com/projecthydra/sufia/master/template.rb creates={{ application_home }}/Gemfile"
-    #shell: "rails new {{ application_home }} -m roles/sufia/files/template.rb creates={{ application_home }}/Gemfile"
-    when: rails_app.stat.exists == false
-
-  - name: Generate primary work type
-    become: yes
-    command: "bundle exec rails generate sufia:work Work chdir={{ application_home }} creates={{ application_home }}/spec/models/work_spec.rb"
+    #shell: "rails new {{ application_home }} -m https://raw.githubusercontent.com/samvera/hyrax/master/template.rb creates={{ application_home }}/Gemfile"
+    shell: "rails new {{ application_home }} -m roles/hyrax-fullstack/files/template.rb creates={{ application_home }}/Gemfile"
 
   - name: devise.rb
     become: yes
     lineinfile:
-      #path: /var/sufia/config/initializers/devise.rb'
+      #path: /var/hyrax/config/initializers/devise.rb'
       dest: "{{ application_home }}/config/initializers/devise.rb"
       regexp: '^  # config.secret_key'
       line: "  config.secret_key = '{{ devise_secret }}'"
@@ -48,12 +42,10 @@
 
   - name: Add default secret to secrets.yml
     become: yes
-    lineinfile:
-      dest: "{{ application_home }}/config/secrets.yml"
-      state: present
+    replace:
+      path: "{{ application_home }}/config/secrets.yml"
       regexp: '<%= ENV\["SECRET_KEY_BASE"\] %>'
-      line: "{{ rails_secret }}"
-      backrefs: yes
+      replace: "{{ rails_secret }}"
 
   - name: Add default roles to config/role_map.yml
     become: yes
@@ -67,15 +59,31 @@
             - archivist1@example.com
             - researcher1@example.com
 
-  - name: Do the stuff in template.rb, only for production railsenv
-    become: yes
-    command: "bundle exec {{ item }} RAILS_ENV='production' chdir={{ application_home }}"
-    with_items:
-      - 'rake curation_concerns:workflow:load'
-      - 'rake db:migrate'
+  - name: Remove Spring gem
+    command: "bin/spring binstub --remove --all"
+    args:
+      chdir: "{{ application_home }}"
+      removes: "{{ application_home }}/bin/spring"
+
+  - name: Add hydra-role-management gem to gemfile
+    lineinfile: "dest={{ application_home }}/Gemfile line=\"gem 'hydra-role-management'\""
+
+  - name: Install hydra-role-management gem
+    command: "bundle install chdir={{ application_home }}"
+
+  - name: Generate admin role
+    command: "rails generate roles chdir={{ application_home }}"
+    args:
+      creates: "{{ application_home }}/db/migrate/*_user_roles.rb"
+
+  - name: Rake db
+    command: "bundle exec rails db:migrate RAILS_ENV=production chdir={{ application_home }}"
+
+  - name: Do a bad thing
+    command: setenforce 0
+    run_once: true
 
   - name: whitelist the 10.0.2.2 network space in the Web Console config
-    become: yes
     tags: whitelist
     blockinfile:
       dest: "{{ application_home }}/config/environments/development.rb"

@@ -38,7 +38,10 @@
     lineinfile: "dest={{ application_home }}/Gemfile line=\"gem 'pg'\""
 
   - name: Install postgresql gem 
-    shell: "cd {{ application_home }} && bundle install"
+    command: "bundle install chdir={{ application_home }}"
 
   - name: update application's config/database.yml
     template: src=database.yml.j2 dest={{ application_home }}/config/database.yml
+
+  - name: migrate db
+    command: "bundle exec rails db:migrate RAILS_ENV=production chdir={{ application_home }}"
