@@ -27,7 +27,7 @@ and you should see 'centos/7' listed
 
 ### Edit vars.yml as needed:
 
-* Edit application_home if you want it to install in someplace other than /home/vagrant/hyrax
+* Edit application_home if you want it to install in someplace other than /home/vagrant/hyrax, eg. /var/hyrax if building fullstack environment.
 
 ### Copy private.yml.template to private.yml.
 
@@ -77,7 +77,7 @@ Follow the instructions on the [Hyrax Management Guide](https://github.com/samve
 ## For fullstack environment
 
 ### cd into /vagrant dir and run fullstack playbook   
-`cd /vagrant`
+`cd /vagrant`   
 `ansible-playbook -i inventory fullstack.yml`
 
 ###Run the following commands.   
