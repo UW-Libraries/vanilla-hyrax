@@ -1,0 +1,4 @@
+solr_ver: 6.3.0
+
+solr_context: hydra
+solr_core: "blacklight-core"

@@ -1,10 +1,10 @@
-application_home: /home/vagrant/sufia
-fits_version: 0.8.5
+application_home: /var/hyrax
+fits_version: 1.0.5
 install_path: /usr/local/bin
 ansible_target: localhost
 ruby_version: 2.4.1
 rails_version: 5.0.1
 #sufia_version: "branch: 'master'"
-sufia_version: "tag: 'v7.3.0'"
+#sufia_version: "tag: 'v7.3.0'"
 #sufia_version: "ref: '3d06cc0a705c16f4a645607321f7c9dd053f34c3'"
 config_path: "{{ application_home }}/config" 

@@ -1,0 +1,70 @@
+# copied from https://github.com/acozine/sufia-centos/blob/master/roles/passenger/tasks/main.yml
+
+- name: install apache
+  become: yes
+  yum: name={{ item }} state=present
+  with_items:
+    - httpd
+    - httpd-devel
+    - libcurl-devel
+    - mod_xsendfile
+    - openssl
+    - openssl-devel
+
+- name: create apache vhosts file
+  become: yes
+  template: src=apache_config.j2 dest=/etc/httpd/conf.d/{{ project_name }}.conf owner=apache group=apache backup=no
+
+- name: set apache to restart on reboot
+  become: yes
+  service: name=httpd enabled=yes
+
+- name: install passenger gem
+  become: yes
+  gem: name=passenger user_install=no state=present version={{ passenger_ver }}
+
+#- name: symlink passenger utilities for root user
+#  file: src=/usr/local/bin/{{ item }} dest=/usr/sbin/{{ item }} state=link
+#  with_items:
+#    - passenger
+#    - passenger-install-apache2-module
+#    - passenger-install-nginx-module
+#    - passenger-memory-stats
+#    - passenger-status
+
+- name: install passenger-install-apache2-module
+  become: yes
+  shell: passenger-install-apache2-module --auto creates=/usr/lib64/ruby/gems/2.4.0/gems/passenger-{{ passenger_ver }}/buildout/apache2/mod_passenger.so
+
+- name: symlink mod_passenger.so to apache modules dir
+  become: yes
+  file: 
+    src: /usr/lib64/ruby/gems/2.4.0/gems/passenger-{{ passenger_ver }}/buildout/apache2/mod_passenger.so
+    dest: /usr/lib64/httpd/modules/mod_passenger.so
+    state: link
+
+- name: generate passenger.conf file
+  become: yes
+  shell: passenger-install-apache2-module --snippet > /etc/httpd/conf.modules.d/passenger.conf
+
+- name: run rake db:migrate here too.
+  command: "cd {{ application_home }} && RAILS_ENV=production bundle exec rake db:migrate"
+
+- name: precompile assets
+  become: yes
+  shell: "cd {{ application_home }} && RAILS_ENV=production bundle exec rake assets:precompile"
+
+#- name: disable selinux
+#  selinux:
+#    state: disabled
+
+- name: change owner to apache
+  become: yes
+  file:
+    path: "{{ application_home }}"
+    recurse: yes
+    owner: apache
+
+- name: restart apache
+  become: yes
+  service: name=httpd state=restarted

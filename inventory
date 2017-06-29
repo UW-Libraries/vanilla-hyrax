@@ -3,3 +3,6 @@ localhost    ansible_connection=local
 
 [demoserver]
 druw-test.lib.washington.edu
+
+[sandbox]
+druw-sandbox.lib.washington.edu

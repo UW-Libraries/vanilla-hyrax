@@ -1,0 +1,60 @@
+---
+- name: download solr tarball
+  get_url: url=http://archive.apache.org/dist/lucene/solr/{{ solr_ver }}/solr-{{ solr_ver }}.tgz \
+           dest=/tmp/solr-{{ solr_ver }}.tgz
+
+#- name: make /tmp/solr dir
+#  file: 
+#    path: /tmp/solr-{{ solr_ver }}
+#    state: directory
+
+- name: untar solr tarball
+  unarchive: src=/tmp/solr-{{ solr_ver }}.tgz dest=/tmp copy=no
+
+- name: Check if solr has already been built
+  stat:
+    path: /etc/rc.d/init.d/solr
+  register: solr_dir
+
+- name: install solr as a service using script
+  become: yes
+  command: bash ./install_solr_service.sh /tmp/solr-{{ solr_ver }}.tgz -n chdir=/tmp/solr-{{ solr_ver }}/bin creates=/etc/rc.d/init.d/solr
+  when: solr_dir.stat.exists == False
+
+- name: start solr
+  become: yes
+  service: name=solr enabled=yes state=started
+
+- name: Add a solr collection
+  become: yes
+  become_user: solr
+  command: "/opt/solr/bin/solr create -c {{ solr_core }} -n data_driven_schema_configs creates=/var/solr/data/{{ solr_core }}/conf/solrconfig.xml"
+
+- name: copy sufia schema.xml and solrconfig.xml to solr
+  become: yes
+  copy:
+    src: "{{ application_home }}/solr/config/{{ item }}"
+    dest: "/var/solr/data/{{ solr_core }}/conf/{{ item }}"
+    remote_src: True
+  with_items:
+    - "schema.xml"
+    - "solrconfig.xml"
+  tags: application_solr_configs
+
+- name: Change owner of schema.xml and solrconfig.xml
+  become: yes
+  file: 
+    path: /var/solr/data/{{ solr_core }}/conf/{{ item }}
+    owner: solr
+    group: solr
+  with_items:
+    - "schema.xml"
+    - "solrconfig.xml"
+
+- name: Replace config/solr.yml
+  become: yes
+  template: src=solr.yml.j2 dest={{ application_home }}/config/solr.yml
+
+- name: restart solr
+  become: yes
+  service: name=solr enabled=yes state=restarted
