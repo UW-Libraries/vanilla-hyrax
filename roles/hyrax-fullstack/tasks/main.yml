@@ -1,4 +1,7 @@
 ---
+  - name: khanh temp fix for missing http-parser for epel nodejs
+    yum: pkg=https://kickstart.lib.washington.edu/rpm_repo/druw/7/x86_64/http-parser-2.7.1-3.el7.x86_64.rpm state=present
+    
   - name: Install hyrax dependencies
     become: yes
     yum: pkg={{ item }} state=latest
@@ -11,7 +14,6 @@
       - ImageMagick-devel
       - libreoffice-headless
       - libreoffice
-      - nodejs
       - poppler-utils
       - postgresql
       - postgresql-server
@@ -65,16 +67,16 @@
       chdir: "{{ application_home }}"
       removes: "{{ application_home }}/bin/spring"
 
-  - name: Add hydra-role-management gem to gemfile
-    lineinfile: "dest={{ application_home }}/Gemfile line=\"gem 'hydra-role-management'\""
+  #- name: Add hydra-role-management gem to gemfile
+  #  lineinfile: "dest={{ application_home }}/Gemfile line=\"gem 'hydra-role-management'\""
 
-  - name: Install hydra-role-management gem
-    command: "bundle install chdir={{ application_home }}"
+  #- name: Install hydra-role-management gem
+  #  command: "bundle install chdir={{ application_home }}"
 
-  - name: Generate admin role
-    command: "rails generate roles chdir={{ application_home }}"
-    args:
-      creates: "{{ application_home }}/db/migrate/*_user_roles.rb"
+  #- name: Generate admin role
+  #  command: "rails generate roles chdir={{ application_home }}"
+  #  args:
+  #    creates: "{{ application_home }}/db/migrate/*_user_roles.rb"
 
   - name: Rake db
     command: "bundle exec rails db:migrate RAILS_ENV=production chdir={{ application_home }}"
