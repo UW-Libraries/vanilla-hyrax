@@ -47,14 +47,33 @@ and you should see 'centos/7' listed
 `cd /vagrant`   
 `ansible-playbook -i inventory development.yml`
 
-* You will have to start the following commands manually. You will probably also have to hit enter to return your prompt after each service starts up.   
-`cd /home/vagrant/hyrax`   
-* Start development solr   
-`bundle exec solr_wrapper -d solr/config/ --collection_name hydra-development &`   
-* Start FCRepo - your fedora project instance   
-`bundle exec fcrepo_wrapper -p 8984 &`   
-* Start development rails server (needs to start as sudo until I figure out perms)   
-`rails server -p 3000 -b 0.0.0.0`
+### Start Up Hyrax for the First Time
+
+* You will have to start the following commands manually. You will probably also have to hit enter to return your prompt after each service starts up.
+
+`cd /home/vagrant/hyrax`
+
+* Start development solr
+
+    `bundle exec solr_wrapper -d solr/config/ --collection_name hydra-development &`
+
+  * If solr 7 gives you problems, run solr 6 instead:
+  
+    `bundle exec solr_wrapper -d solr/config/ --collection_name hydra-development --version 6.6.1 &`
+
+* Start FCRepo - your fedora project instance
+
+    `bundle exec fcrepo_wrapper -p 8984 &`
+
+* Create a default admin set. You only need to do this step ONCE when you first create your new VM:  
+    `rails hyrax:default_admin_set:create`
+
+* Generate a work type. You only need to do this step ONCE when you first create your new VM:  
+    `rails generate hyrax:work GenericWork`
+
+* Start development rails server (needs to start as sudo until I figure out perms)
+
+    `rails server -p 3000 -b 0.0.0.0`
 
 ### Check that Hyrax is Running
 Open a browser and go to http://localhost:3001. The initial load will take a bit (you'll see activity in SSH window as the rails server processes the request).
@@ -85,10 +104,13 @@ Follow the instructions on the [Hyrax Management Guide](https://github.com/samve
 * `cd /var/hyrax`
 
 * Create a default admin set. You only need to do this step ONCE when you first create your new VM:
+
     `sudo rails hyrax:default_admin_set:create RAILS_ENV=production`
 
 * Generate a work type. You only need to do this step ONCE when you first create your new VM:
+
     `sudo rails generate hyrax:work Generic_Work RAILS_ENV=production`
 
 * Restart apache
+
     `sudo systemctl restart httpd`
