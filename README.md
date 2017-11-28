@@ -80,7 +80,7 @@ Follow the instructions on the [Hyrax Management Guide](https://github.com/samve
 `cd /vagrant`   
 `ansible-playbook -i inventory fullstack.yml`
 
-###Run the following commands.   
+### Run the following commands.   
 
 * `cd /var/hyrax`
 
