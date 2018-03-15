@@ -7,7 +7,7 @@ This repository should set up an instance of Hyrax in a Vagrant virtualbox based
  - Virtualbox
 
 ### Install centos 7 virtualbox image
-`vagrant box add centos/7 https://atlas.hashicorp.com/centos/boxes/7`
+`vagrant box add centos/7 https://app.vagrantup.com/centos/boxes/7`
 
 On Windows, you might be given a choice between libvirt or virtualbox. Choose *virtualbox*.
 
@@ -17,7 +17,7 @@ On Windows, you might be given a choice between libvirt or virtualbox. Choose *v
 and you should see 'centos/7' listed
 
 ### Clone this repo, then change to repo's directory
-`git clone git@bitbucket.org:uwlib/vanilla-hyrax.git`
+`git clone git@github.com:UW-Libraries/vanilla-hyrax.git`
 
 `cd vanilla-hyrax`
 
