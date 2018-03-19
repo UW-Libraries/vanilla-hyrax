@@ -3,26 +3,16 @@
   hosts: "{{ ansible_target }}"
   #hosts: localhost
   vars_files:
-    - vars.yml
+    - vars-full.yml
     - private.yml
-
-  environment:
-    SECRET_KEY_BASE: "{{ rails_secret }}"
-
-  #tasks:
-  #  - name: disable selinux
-  #    become: yes
-  #    replace: dest=/etc/selinux/config regexp='^SELINUX=enforcing' replace='SELINUX=disabled'
-  #    tags: selinux
 
   roles:
     - { role: fits, become: yes }
-    - { role: hyrax-fullstack, become: yes }
-    - { role: postgresql, become: yes, tags: ['postgres'] }
-    - { role: redis, become: yes }
-    - { role: tomcat }
-    - { role: fedora, tags: ['fedora'] }
-    - { role: solr, tags: ['solr'] }
-    #- { role: configurations, become: yes, tags: ['configure'] }
-    - { role: apache, tags: ['apache'] }
+    #- { role: hyrax-fullstack, become: yes }
+    #- { role: postgresql, become: yes, tags: ['postgres'] }
+    #- { role: redis, become: yes }
+    #- { role: tomcat }
+    #- { role: fedora, tags: ['fedora'] }
+    #- { role: solr, tags: ['solr'] }
+    #- { role: apache, tags: ['apache'] }
     #- { role: ffmpeg, tags: ffmpeg }

@@ -1,21 +1,26 @@
 ---
-# install fits
-- name: install zip utility
-  package: name=unzip state=present
+
+- name: install prerequisites java, zip, libmediainfo and libzen
+  package: name={{ item }} state=present
+  with_items:
+    - "java"
+    - "libmediainfo"
+    - "libzen"
+    - "unzip"
 
 - name: unpack fits
-  unarchive: src="http://projects.iq.harvard.edu/files/fits/files/fits-{{ fits_version }}.zip" dest="{{ install_path }}/" creates="{{ install_path }}/fits-{{ fits_version }}/fits.sh" copy=no
-  #unarchive: src=roles/fits/files/fits-0.8.5.zip dest="{{ install_path }}/" creates="{{ install_path }}/fits-{{ fits_version }}/fits.sh" copy=no
-  #unarchive: src=fits-0.8.5.zip dest="{{ install_path }}/" creates="{{ install_path }}/fits-{{ fits_version }}/fits.sh" copy=no
+  unarchive: src="http://projects.iq.harvard.edu/files/fits/files/fits-{{ fits_version }}.zip" dest="{{ fits_install_path }}/" creates="{{ fits_install_path }}/fits-{{ fits_version }}/fits.sh" copy=no
+  #unarchive: src=roles/fits/files/fits-0.8.5.zip dest="{{ fits_install_path }}/" creates="{{ fits_install_path }}/fits-{{ fits_version }}/fits.sh" copy=no
+  #unarchive: src=fits-0.8.5.zip dest="{{ fits_install_path }}/" creates="{{ fits_install_path }}/fits-{{ fits_version }}/fits.sh" copy=no
 
 - name: make fits executable
-  file: path="{{ install_path }}/fits-{{ fits_version }}/fits.sh" mode=0755
+  file: path="{{ fits_install_path }}/fits-{{ fits_version }}/fits.sh" mode=0755
 
 - name: make fits-env executable
-  file: path="{{ install_path }}/fits-{{ fits_version }}/fits-env.sh" mode=0755
+  file: path="{{ fits_install_path }}/fits-{{ fits_version }}/fits-env.sh" mode=0755
 
 - name: copy fits scripts
-  shell: "cp -r {{ install_path }}/fits-{{ fits_version }} /usr/local/lib/ creates=/usr/local/lib/fits-{{ fits_version }}"
+  shell: "cp -r {{ fits_install_path }}/fits-{{ fits_version }} /usr/local/lib/ creates=/usr/local/lib/fits-{{ fits_version }}"
 
 - name: symlink fits alias
   file: src="/usr/local/lib/fits-{{ fits_version }}/fits.sh" dest="/usr/local/bin/fits" state=link
@@ -29,5 +34,22 @@
 - name: symlink fits-env.sh alias
   file: src="/usr/local/lib/fits-{{ fits_version }}/fits-env.sh" dest="/usr/bin/fits-env.sh" state=link
 
-- name: symlink fits-env.sh alias
-  file: src="/usr/local/lib/fits-{{ fits_version }}/fits-env.sh" dest="/usr/local/bin/fits-env.sh" state=link
+#- name: symlink fits-env.sh alias
+#  file: src="/usr/local/lib/fits-{{ fits_version }}/fits-env.sh" dest="/usr/local/bin/fits-env.sh" state=link
+
+- name: remove libraries from fits that are not compatible with recent versions of CentOS
+  file:
+    path: /usr/local/fits-{{ fits_version }}/tools/mediainfo/linux/{{ item }}.so.0
+    state: absent
+  with_items:
+    - "libmediainfo"
+    - "libzen"
+
+- name: symlink OS specific versions of libraries for fits
+  file:
+    src: /usr/lib64/{{ item }}.so.0
+    dest: /usr/local/fits-{{ fits_version }}/tools/mediainfo/linux/{{ item }}.so.0
+    state: link
+  with_items:
+    - "libmediainfo"
+    - "libzen"
