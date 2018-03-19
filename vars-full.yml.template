@@ -12,6 +12,8 @@ solr_ver: 6.6.2
 solr_context: hydra
 solr_core: "blacklight-core"
 
+config_path: "{{ application_home }}/config"
+
 fedora_use_postgresql_modeshape: no
 project_modeshape_config: "{{'jdbc-postgresql' if fedora_use_postgresql_modeshape|bool else 'file-simple'}}"
 project_fedora_java_vm_opts: '-Xms512m -Xmx1024m -XX:NewSize=256m -XX:MaxNewSize=256m -XX:MetaspaceSize=256m -XX:MaxMetaspaceSize=256m -XX:+DisableExplicitGC'

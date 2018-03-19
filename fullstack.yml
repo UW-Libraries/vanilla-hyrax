@@ -8,8 +8,8 @@
 
   roles:
     - { role: fits, become: yes }
-    #- { role: hyrax-fullstack, become: yes }
-    #- { role: postgresql, become: yes, tags: ['postgres'] }
+    - { role: hyrax-fullstack, become: yes }
+    - { role: postgresql, become: yes, tags: ['postgres'] }
     #- { role: redis, become: yes }
     #- { role: tomcat }
     #- { role: fedora, tags: ['fedora'] }
