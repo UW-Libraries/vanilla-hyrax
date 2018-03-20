@@ -12,5 +12,5 @@
     - { role: postgresql, become: yes, tags: ['postgres'] }
     - { role: redis, become: yes }
     - { role: fedora, become: yes, tags: ['fedora'] }
-    #- { role: solr, tags: ['solr'] }
-    #- { role: apache, tags: ['apache'] }
+    - { role: solr, tags: ['solr'] }
+    - { role: apache, tags: ['apache'] }

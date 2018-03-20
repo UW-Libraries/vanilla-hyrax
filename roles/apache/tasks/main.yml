@@ -23,15 +23,6 @@
   become: yes
   gem: name=passenger user_install=no state=present version={{ passenger_ver }}
 
-#- name: symlink passenger utilities for root user
-#  file: src=/usr/local/bin/{{ item }} dest=/usr/sbin/{{ item }} state=link
-#  with_items:
-#    - passenger
-#    - passenger-install-apache2-module
-#    - passenger-install-nginx-module
-#    - passenger-memory-stats
-#    - passenger-status
-
 - name: install passenger-install-apache2-module
   become: yes
   shell: passenger-install-apache2-module --auto creates=/usr/lib64/ruby/gems/2.4.0/gems/passenger-{{ passenger_ver }}/buildout/apache2/mod_passenger.so
@@ -53,10 +44,6 @@
 - name: precompile assets
   become: yes
   shell: "cd {{ application_home }} && RAILS_ENV=production bundle exec rake assets:precompile"
-
-#- name: disable selinux
-#  selinux:
-#    state: disabled
 
 - name: change owner to apache
   become: yes
