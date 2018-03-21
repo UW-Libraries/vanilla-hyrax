@@ -1,6 +1,6 @@
 # Vanilla Hyrax
 
-This repository should set up an instance of Hyrax in a Vagrant virtualbox based on centos 7. It will build either a development or a fullstack environment.
+This repository should set up an instance of Hyrax in a Vagrant virtualbox based on centos 7. It will build either a development or a fullstack (development) environment.
 
 ## Prerequisites:
  - Vagrant
@@ -97,6 +97,7 @@ Follow the instructions on the [Hyrax Management Guide](https://github.com/samve
 
 ### cd into /vagrant dir and run fullstack playbook   
 `cd /vagrant`   
+`cp vars-full.yml.template vars-full.yml`   
 `ansible-playbook -i inventory fullstack.yml`
 
 ### Run the following commands.   
@@ -114,3 +115,8 @@ Follow the instructions on the [Hyrax Management Guide](https://github.com/samve
 * Restart apache
 
     `sudo systemctl restart httpd`
+
+* Start sidekiq
+
+    `sudo RAILS_ENV=production bundle exec sidekiq -d -L /var/log/sidekiq/sidekiq.log`
+

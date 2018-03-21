@@ -57,6 +57,12 @@
       - "database"
       - "sidekiq"
 
+  - name: Add sidekiq to application.rb
+    lineinfile:
+      dest: "{{ application_home }}/config/application.rb"
+      insertafter: '  class Application < Rails::Application'
+      line: "    config.active_job.queue_adapter = :sidekiq"
+
   - name: install sidekiq initializer config file
     template: src={{ item }}.rb.j2 dest="{{ config_path }}/initializers/{{ item }}.rb"
     with_items:
