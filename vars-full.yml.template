@@ -1,0 +1,35 @@
+application_home: /var/hyrax
+fits_version: 1.2.0
+fits_install_path: /usr/local
+ansible_target: localhost
+ruby_version: 2.4.2
+rails_version: 5.0.6
+ffmpeg_version: 3.3.4
+project_name: hyrax
+server_name: localhost
+passenger_ver: 5.1.11
+solr_ver: 6.6.2
+
+solr_context: hydra
+solr_core: "blacklight-core"
+
+config_path: "{{ application_home }}/config"
+
+fedora_use_postgresql_modeshape: no
+project_modeshape_config: "{{'jdbc-postgresql' if fedora_use_postgresql_modeshape|bool else 'file-simple'}}"
+project_fedora_java_vm_opts: '-Xms512m -Xmx1024m -XX:NewSize=256m -XX:MaxNewSize=256m -XX:MetaspaceSize=256m -XX:MaxMetaspaceSize=256m -XX:+DisableExplicitGC'
+
+fedora_version: "{{project_fedora_version | default('4.7.3')}}"
+fedora_user: 'tomcat'
+fedora_group: '{{ fedora_user }}'
+fedora_user_home: '/usr/share/{{ fedora_user }}'
+fedora_data_dir: '/var/fedora-data'
+fedora_config_dir: '{{ fedora_user }}/fedora-config'
+fedora_app_dir: '/var/lib/tomcat/webapps'
+#fedora_binary_storage_dir: '/mnt/fcrepo-bin'
+fedora_modeshape_config: "classpath:/config/{{project_modeshape_config | default('file-simple')}}/repository.json"
+fedora_local_modeshape_config_file: file-simple-repository.json
+fedora_remote_modeshape_config_file: "{{ fedora_config_dir }}/repository.json"
+fedora_postgresql_modeshape_settings: "-Dfcrepo.postgresql.username={{project_db_user}} -Dfcrepo.postgresql.host={{project_db_host}} -Dfcrepo.postgresql.port={{project_db_port}}"
+fedora_java_vm_opts: "{{ project_fedora_java_vm_opts | default('-Xms512m -Xmx1024m -XX:NewSize=256m -XX:MaxNewSize=256m -XX:MetaspaceSize=256m -XX:MaxMetaspaceSize=256m -XX:+DisableExplicitGC') }}"
+

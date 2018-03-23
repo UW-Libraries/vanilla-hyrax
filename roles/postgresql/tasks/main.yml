@@ -34,14 +34,48 @@
   - name: restart postgresql
     service: name=postgresql state=restarted
 
-  - name: Add postgresql gem to gemfile
-    lineinfile: "dest={{ application_home }}/Gemfile line=\"gem 'pg'\""
+  #- name: Add postgresql gem to gemfile
+  #  lineinfile: "dest={{ application_home }}/Gemfile line=\"gem 'pg'\""
 
-  - name: Install postgresql gem 
-    command: "bundle install chdir={{ application_home }}"
+  - name: Add pinned postgresql gem to gemfile
+    lineinfile: "dest={{ application_home }}/Gemfile line=\"gem 'pg', '~>0.21'\""
 
-  - name: update application's config/database.yml
-    template: src=database.yml.j2 dest={{ application_home }}/config/database.yml
+  - name: Add postgresql and sidekiq gem to gemfile
+    lineinfile: "dest={{ application_home }}/Gemfile line=\"gem '{{ item }}'\""
+    with_items:
+      - "sidekiq"
+
+  - name: Install postgresql and sidekiq gem 
+    command: "bundle install --with production --path vendor/bundle chdir={{ application_home }}"
+
+  #- name: update application's config/database.yml
+  #  template: src=database.yml.j2 dest={{ application_home }}/config/database.yml
+
+  - name: update application configs for database and sidekiq
+    template: src={{ item }}.yml.j2 dest="{{ config_path }}/{{ item }}.yml"
+    with_items:
+      - "database"
+      - "sidekiq"
+
+  - name: Add sidekiq to application.rb
+    lineinfile:
+      dest: "{{ application_home }}/config/application.rb"
+      insertafter: '  class Application < Rails::Application'
+      line: "    config.active_job.queue_adapter = :sidekiq"
+
+  - name: install sidekiq initializer config file
+    template: src={{ item }}.rb.j2 dest="{{ config_path }}/initializers/{{ item }}.rb"
+    with_items:
+      - "sidekiq"
+
+  - name: copy sidekiq init.d file
+    template:
+      src: sidekiq.init.j2
+      dest: "/etc/init.d/sidekiq"
+      owner: root
+      group: root
+      mode: 0744
 
   - name: migrate db
     command: "bundle exec rails db:migrate RAILS_ENV=production chdir={{ application_home }}"
+    ignore_errors: yes

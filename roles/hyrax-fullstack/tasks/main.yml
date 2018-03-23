@@ -2,11 +2,19 @@
   - name: khanh temp fix for missing http-parser for epel nodejs
     yum: pkg=https://kickstart.lib.washington.edu/rpm_repo/druw/7/x86_64/http-parser-2.7.1-3.el7.x86_64.rpm state=present
     
+  #- name: khanh fix for more recent ruby version from epel
+  #  yum: pkg=https://kickstart.lib.washington.edu/rpm_repo/druw/7/x86_64/ruby-{{ ruby_version }}-1.el7.x86_64.rpm state=present
+  
+  - name: Install druw.repo for specific rpms
+    template: src=druw.repo.j2 dest=/etc/yum.repos.d/druw.repo
+  
   - name: Install hyrax dependencies
     become: yes
     yum: pkg={{ item }} state=latest
     with_items:
       - clamav
+      - clamav-devel
+      - clamav-update
       - coreutils
       - gcc-c++
       - git
@@ -14,6 +22,8 @@
       - ImageMagick-devel
       - libreoffice-headless
       - libreoffice
+      - nodejs
+      - openssl
       - poppler-utils
       - postgresql
       - postgresql-server
@@ -23,7 +33,8 @@
 
   - name: install ruby
     become: true
-    yum: name=https://github.com/feedforce/ruby-rpm/releases/download/{{ ruby_version }}/ruby-{{ ruby_version }}-1.el7.centos.x86_64.rpm
+    yum: name=ruby-{{ ruby_version }}-1.el7.centos.x86_64
+    #yum: name=https://github.com/feedforce/ruby-rpm/releases/download/{{ ruby_version }}/ruby-{{ ruby_version }}-1.el7.centos.x86_64.rpm
 
   - name: install rails
     become: true
@@ -32,6 +43,29 @@
   - name: Create new rails app
     #shell: "rails new {{ application_home }} -m https://raw.githubusercontent.com/samvera/hyrax/master/template.rb creates={{ application_home }}/Gemfile"
     shell: "rails new {{ application_home }} -m roles/hyrax-fullstack/files/template.rb creates={{ application_home }}/Gemfile"
+
+  - name: Install static ffmpeg copied from Khanh's playbook to this playbook
+    copy:
+      src: ffmpeg-{{ ffmpeg_version }}
+      dest: /usr/bin/ffmpeg
+      owner: root
+      group: root
+      mode: 0755
+      force: yes
+
+  - name: enable ffmpeg
+    replace:
+      dest: "{{ config_path }}/initializers/hyrax.rb"
+      regexp: '# config.enable_ffmpeg = false'
+      replace: 'config.enable_ffmpeg = true'
+
+  - name: Add clamav gem to gemfile
+    lineinfile: "dest={{ application_home }}/Gemfile line=\"gem '{{ item }}'\""
+    with_items:
+      - "clamav"
+
+  - name: Bundle install
+    command: "bundle install --without production --path vendor/bundle chdir={{ application_home }}"
 
   - name: devise.rb
     become: yes
@@ -85,12 +119,12 @@
     command: setenforce 0
     run_once: true
 
-  - name: whitelist the 10.0.2.2 network space in the Web Console config
-    tags: whitelist
-    blockinfile:
-      dest: "{{ application_home }}/config/environments/development.rb"
-      insertbefore: "end"
-      block: |2
-          class Application < Rails::Application
-            config.web_console.whitelisted_ips = '10.0.2.2'
-          end
+  #- name: whitelist the 10.0.2.2 network space in the Web Console config
+  #  tags: whitelist
+  #  blockinfile:
+  #    dest: "{{ application_home }}/config/environments/development.rb"
+  #    insertbefore: "end"
+  #    block: |2
+  #        class Application < Rails::Application
+  #          config.web_console.whitelisted_ips = '10.0.2.2'
+  #        end

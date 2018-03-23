@@ -1,4 +1,7 @@
 ---
+- name: ensure java is installed
+  yum: pkg=java state=present
+
 - name: download solr tarball
   get_url: url=http://archive.apache.org/dist/lucene/solr/{{ solr_ver }}/solr-{{ solr_ver }}.tgz \
            dest=/tmp/solr-{{ solr_ver }}.tgz
@@ -30,7 +33,7 @@
   become_user: solr
   command: "/opt/solr/bin/solr create -c {{ solr_core }} -n data_driven_schema_configs creates=/var/solr/data/{{ solr_core }}/conf/solrconfig.xml"
 
-- name: copy sufia schema.xml and solrconfig.xml to solr
+- name: copy hyrax schema.xml and solrconfig.xml to solr
   become: yes
   copy:
     src: "{{ application_home }}/solr/config/{{ item }}"

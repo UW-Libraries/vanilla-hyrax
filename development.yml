@@ -10,4 +10,3 @@
     - { role: fits, become: yes }
     - { role: hyrax-dev }
     - { role: redis, become: yes }
-    #- { role: ffmpeg, tags: ffmpeg }

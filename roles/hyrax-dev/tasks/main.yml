@@ -1,4 +1,12 @@
 ---
+  - name: khanh temp fix for missing http-parser for epel nodejs
+    become: yes
+    yum: pkg=https://kickstart.lib.washington.edu/rpm_repo/druw/7/x86_64/http-parser-2.7.1-3.el7.x86_64.rpm state=present
+
+  - name: Install druw.repo for specific rpms
+    become: yes
+    template: src=druw.repo.j2 dest=/etc/yum.repos.d/druw.repo
+
   - name: Install hyrax dependencies
     become: yes
     yum: pkg={{ item }} state=latest
@@ -18,7 +26,8 @@
 
   - name: install ruby
     become: true
-    yum: name=https://github.com/feedforce/ruby-rpm/releases/download/{{ ruby_version }}/ruby-{{ ruby_version }}-1.el7.centos.x86_64.rpm
+    yum: name=ruby-{{ ruby_version }}-1.el7.centos.x86_64
+    #yum: name=https://github.com/feedforce/ruby-rpm/releases/download/{{ ruby_version }}/ruby-{{ ruby_version }}-1.el7.centos.x86_64.rpm
 
   - name: install rails
     become: true
@@ -27,6 +36,25 @@
   - name: Create new rails app
     #shell: "rails new {{ application_home }} -m https://raw.githubusercontent.com/projecthydra-labs/hyrax/master/template.rb creates={{ application_home }}/Gemfile"
     shell: "rails new {{ application_home }} -m roles/hyrax-dev/files/template.rb creates={{ application_home }}/Gemfile"
+
+  - name: Install static ffmpeg copied from Khanh's playbook to this playbook
+    become: true
+    copy:
+      src: ffmpeg-{{ ffmpeg_version }}
+      dest: /usr/bin/ffmpeg
+      owner: root
+      group: root
+      mode: 0755
+      force: yes
+
+  - name: enable ffmpeg
+    replace:
+      dest: "{{ config_path }}/initializers/hyrax.rb"
+      regexp: '# config.enable_ffmpeg = false'
+      replace: 'config.enable_ffmpeg = true'
+
+  - name: Bundle install
+    command: "bundle install --without production --path vendor/bundle chdir={{ application_home }}"
 
   - name: devise.rb
     lineinfile:

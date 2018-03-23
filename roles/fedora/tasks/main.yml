@@ -1,35 +1,46 @@
 ---
-# Modified version of https://github.com/acozine/sufia-centos/blob/master/roles/hydra-stack/tasks/fedora.yml
+- name: install tomcat packages
+  yum: name={{ item }} state=present
+  with_items:
+      - tomcat
+      - tomcat-webapps
+      - tomcat-admin-webapps
+
+- name: set tomcat to restart on reboot
+  service: name=tomcat enabled=yes
+
+- name: stop tomcat
+  service:
+    name: tomcat
+    state: stopped
+
+- name: create fedora data dir
+  file:
+    path: '{{ item }}'
+    owner: '{{ fedora_user }}'
+    group: '{{ fedora_group }}'
+    mode: 0770
+    state: directory
+  with_items:
+    - "{{ fedora_data_dir }}"
 
 - name: download fedora repository
-  become: yes
-  get_url: url=https://repo1.maven.org/maven2/org/fcrepo/fcrepo-webapp/{{ fedora_ver }}/fcrepo-webapp-{{ fedora_ver }}.war \
-           dest={{ install_path }}/fcrepo-webapp-{{ fedora_ver }}.war
+  get_url: 
+    url: https://repo1.maven.org/maven2/org/fcrepo/fcrepo-webapp/{{ fedora_version }}/fcrepo-webapp-{{ fedora_version }}.war
+    dest: "{{ fedora_app_dir }}/fedora.war"
+    owner: '{{ fedora_user }}'
+    group: '{{ fedora_group }}'
+    mode: 0444
+    timeout: 100
 
-- name: check fedora.war
-  stat: path={{ tomcat }}/webapps/fedora.war
-  register: fedora_war
-
-- name: copy over fedora.war
-  become: yes
-  command: cp {{ install_path }}/fcrepo-webapp-{{ fedora_ver }}.war {{ tomcat }}/webapps/fedora.war
-  when: fedora_war.stat.exists == False
-
-- name: make fedora data dir
-  become: yes
-  file: owner=tomcat group=tomcat state=directory path={{ application_home }}/fedora-data
-
-- name: create tomcat config and java options
-  become: yes
-  template: src=tomcat.conf.j2 dest=/etc/tomcat/tomcat.conf backup=yes
+- name: add fedora and java config options to tomcat.conf
+  template: src=tomcat.conf.j2 dest=/etc/tomcat/tomcat.conf
 
 - name: change fedora.yml prod port to 8080
-  become: yes
   replace:
     dest: "{{ application_home }}/config/fedora.yml"
     regexp: '127\.0\.0\.1:8983\/fedora\/rest'
     replace: '127.0.0.1:8080/fedora/rest'
 
 - name: restart tomcat
-  become: yes
   service: name=tomcat enabled=yes state=restarted
