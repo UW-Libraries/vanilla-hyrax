@@ -118,5 +118,6 @@ Follow the instructions on the [Hyrax Management Guide](https://github.com/samve
 
 * Start sidekiq
 
+    `sudo mkdir /var/log/sidekiq`
     `sudo RAILS_ENV=production bundle exec sidekiq -d -L /var/log/sidekiq/sidekiq.log`
 
