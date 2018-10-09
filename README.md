@@ -4,7 +4,6 @@ This repository should set up an instance of Hyrax in a Vagrant virtualbox based
 
 ## Prerequisites:
  - Vagrant
- - Virtualbox
 
 ### Install centos 7 virtualbox image
 `vagrant box add centos/7 https://app.vagrantup.com/centos/boxes/7`
@@ -27,14 +26,14 @@ and you should see 'centos/7' listed
 
 ### Edit vars.yml as needed:
 
-* Edit application_home if you want it to install in someplace other than /home/vagrant/hyrax, eg. /var/hyrax if building fullstack environment.
+* Edit application_home if you want it to install in someplace other than /home/vagrant/hyrax
 
 ### Copy private.yml.template to private.yml.
 
 `cp private.yml.template private.yml`
 
 ### Start your vagrant box
-`vagrant up --provider virtualbox`
+`vagrant up`
 
 ### ssh into vagrant box
 `vagrant ssh`
@@ -56,10 +55,6 @@ and you should see 'centos/7' listed
 * Start development solr
 
     `bundle exec solr_wrapper -d solr/config/ --collection_name hydra-development &`
-
-  * If solr 7 gives you problems, run solr 6 instead:
-  
-    `bundle exec solr_wrapper -d solr/config/ --collection_name hydra-development --version 6.6.1 &`
 
 * Start FCRepo - your fedora project instance
 

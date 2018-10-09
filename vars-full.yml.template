@@ -2,8 +2,8 @@ application_home: /var/hyrax
 fits_version: 1.2.0
 fits_install_path: /usr/local
 ansible_target: localhost
-ruby_version: 2.4.2
-rails_version: 5.0.6
+ruby_version: 2.4.4
+rails_version: 5.1.6
 ffmpeg_version: 3.3.4
 project_name: hyrax
 server_name: localhost
