@@ -1,47 +1,10 @@
 ---
-  - name: Install hyrax dependencies
-    become: yes
-    yum:
-      name:
-        - clamav
-        - coreutils
-        - gcc-c++
-        - git
-        - GraphicsMagick
-        - ImageMagick-devel
-        - libreoffice-headless
-        - libreoffice
-        - nodejs
-        - poppler-utils
-        - postgresql
-        - postgresql-server
-        - postgresql-devel
-        - poppler-utils
-        - python-psycopg2
-        - sqlite-devel
-      state: present
-
-  - name: install ruby
-    become: true
-    #yum: name=ruby-{{ ruby_version }}-1.el7.centos.x86_64
-    yum: name=https://github.com/feedforce/ruby-rpm/releases/download/{{ ruby_version }}/ruby-{{ ruby_version }}-1.el7.centos.x86_64.rpm
-
   - name: install rails
     become: true
     gem: name=rails version="{{ rails_version }}" user_install=no
 
   - name: Create new rails app
     shell: "rails new {{ application_home }} -m roles/hyrax-dev/files/template.rb creates={{ application_home }}/Gemfile"
-
-  - name: Install static ffmpeg copied from Khanh's playbook to this playbook
-    become: true
-    copy:
-      src: ffmpeg-{{ ffmpeg_version }}
-      dest: /usr/bin/ffmpeg
-      owner: root
-      group: root
-      mode: 0755
-      force: yes
 
   - name: enable ffmpeg
     replace:

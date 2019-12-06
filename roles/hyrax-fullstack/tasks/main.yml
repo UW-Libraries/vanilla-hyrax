@@ -1,50 +1,10 @@
 ---
-  - name: Install hyrax dependencies
-    become: yes
-    yum: pkg={{ item }} state=latest
-    with_items:
-      - clamav
-      - clamav-devel
-      - clamav-update
-      - coreutils
-      - gcc-c++
-      - git
-      - GraphicsMagick
-      - ImageMagick-devel
-      - libreoffice-headless
-      - libreoffice
-      - nodejs
-      - openssl
-      - poppler-utils
-      - postgresql
-      - postgresql-server
-      - postgresql-devel
-      - python-psycopg2
-      - sqlite-devel
-
-  - name: install ruby
-    become: true
-    #yum: name=ruby-{{ ruby_version }}-1.el7.centos.x86_64
-    yum: name=https://github.com/feedforce/ruby-rpm/releases/download/{{ ruby_version }}/ruby-{{ ruby_version }}-1.el7.centos.x86_64.rpm
-
-  - name: install rails
-    become: true
-    gem: name=rails version="{{ rails_version }}" user_install=no
-
   - name: Create new rails app
     shell: "rails new {{ application_home }} -m roles/hyrax-fullstack/files/template.rb creates={{ application_home }}/Gemfile"
 
-  - name: Install static ffmpeg copied from Khanh's playbook to this playbook
-    copy:
-      src: ffmpeg-{{ ffmpeg_version }}
-      dest: /usr/bin/ffmpeg
-      owner: root
-      group: root
-      mode: 0755
-      force: yes
-
   - name: Bundle install
-    command: "bundle install --without production --path vendor/bundle chdir={{ application_home }}"
+#    command: "bundle install --without production --path vendor/bundle chdir={{ application_home }}"
+    command: "bundle install --path vendor/bundle chdir={{ application_home }}"
 
   - name: enable ffmpeg
     replace:
@@ -52,10 +12,13 @@
       regexp: '# config.enable_ffmpeg = false'
       replace: 'config.enable_ffmpeg = true'
 
-  - name: Add clamav gem to gemfile
-    lineinfile: "dest={{ application_home }}/Gemfile line=\"gem '{{ item }}'\""
-    with_items:
-      - "clamav"
+  #- name: Add clamav gem to gemfile
+  #  lineinfile: "dest={{ application_home }}/Gemfile line=\"gem '{{ item }}'\""
+  #  with_items:
+  #    - "clamav"
+  #  Disable this for now since bundler will fail. centos 7 installs ClamAV 0.101.4
+  #  https://github.com/samvera/hyrax/issues/3538
+  #  https://github.com/psu-stewardship/scholarsphere/wiki/Clam-AV-Error-on-Bundle-install
 
   - name: devise.rb
     become: yes

@@ -1,0 +1,44 @@
+---
+
+- name: install base packages
+  yum: 
+    name: "{{ packages }}"
+    state: present
+  vars:
+    packages:
+    - clamav
+    - clamav-devel
+    - coreutils
+    - gcc-c++
+    - GraphicsMagick
+    - ImageMagick-devel
+    - java
+    - libmediainfo
+    - libreoffice-headless
+    - libreoffice
+    - libzen
+    - nodejs
+    - openssl
+    - poppler-utils
+    - postgresql
+    - postgresql-devel
+    - postgresql-server
+    - python-psycopg2
+    - sqlite-devel
+    - unzip
+
+- name: Install ruby
+  yum: pkg=https://github.com/feedforce/ruby-rpm/releases/download/{{ ruby_version }}/ruby-{{ ruby_version }}-1.el7.centos.x86_64.rpm state=present
+
+- name: install rails
+  gem: name=rails version="{{ rails_version }}" user_install=no
+
+- name: install static ffmpeg copied from Khanh's playbook
+  copy:
+    src: ffmpeg-{{ ffmpeg_version }}
+    dest: /usr/bin/ffmpeg
+    owner: root
+    group: root
+    mode: 0755
+    force: yes
+

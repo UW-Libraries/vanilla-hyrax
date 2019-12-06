@@ -1,7 +1,10 @@
 ---
 - name: install tomcat packages
-  yum: name={{ item }} state=present
-  with_items:
+  yum: 
+    name: "{{ packages }}" 
+    state: present
+  vars:
+    packages:
       - tomcat
       - tomcat-webapps
       - tomcat-admin-webapps

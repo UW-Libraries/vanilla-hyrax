@@ -1,12 +1,12 @@
 ---
 
-- name: install prerequisites java, zip, libmediainfo and libzen
-  package: name={{ item }} state=present
-  with_items:
-    - "java"
-    - "libmediainfo"
-    - "libzen"
-    - "unzip"
+#- name: install prerequisites java, zip, libmediainfo and libzen
+#  package: name={{ item }} state=present
+#  with_items:
+#    - "java"
+#    - "libmediainfo"
+#    - "libzen"
+#    - "unzip"
 
 - name: unpack fits
   unarchive: src="http://projects.iq.harvard.edu/files/fits/files/fits-{{ fits_version }}.zip" dest="{{ fits_install_path }}/" creates="{{ fits_install_path }}/fits-{{ fits_version }}/fits.sh" copy=no

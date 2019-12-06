@@ -7,6 +7,7 @@
     - private.yml
 
   roles:
-    - { role: fits, become: yes }
-    - { role: hyrax-dev }
-    - { role: redis, become: yes }
+    - { role: base, become: true, tags: ['base'] }
+    - { role: fits, become: true, tags: ['fits'] }
+    - { role: hyrax-dev, tags: ['hyrax'] }
+    - { role: redis, become: true }
