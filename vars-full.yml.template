@@ -2,7 +2,8 @@ application_home: /var/hyrax
 fits_version: 1.2.0
 fits_install_path: /usr/local
 ansible_target: localhost
-ruby_version: 2.6.4
+#ruby_version: 2.6.4
+ruby_version: 2.4.9
 #rails_version: 5.2.0
 rails_version: 5.1.6
 ffmpeg_version: 3.3.4
@@ -28,6 +29,7 @@ fedora_user_home: '/usr/share/{{ fedora_user }}'
 fedora_data_dir: '/var/fedora-data'
 fedora_config_dir: '{{ fedora_user }}/fedora-config'
 fedora_app_dir: '/var/lib/tomcat/webapps'
+fedora_binary_storage_dir: '/var/fcrepo-bin'
 #fedora_binary_storage_dir: '/mnt/fcrepo-bin'
 fedora_modeshape_config: "classpath:/config/{{project_modeshape_config | default('file-simple')}}/repository.json"
 fedora_local_modeshape_config_file: file-simple-repository.json
