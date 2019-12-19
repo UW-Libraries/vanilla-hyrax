@@ -11,7 +11,7 @@
     - { role: fits, become: true, tags: ['fits'] }
     - { role: hyrax-fullstack, become: true, tags: ['hyrax'] }
     - { role: postgresql, become: true, tags: ['postgres'] }
-    - { role: redis, become: true }
+    - { role: redis, become: true, tags: ['redis'] }
     - { role: fedora, become: true, tags: ['fedora'] }
     - { role: solr, become: true, tags: ['solr'] }
     - { role: apache, become: true, tags: ['apache'] }

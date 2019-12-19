@@ -30,6 +30,9 @@
 - name: Install ruby
   yum: pkg=https://github.com/feedforce/ruby-rpm/releases/download/{{ ruby_version }}/ruby-{{ ruby_version }}-1.el7.centos.x86_64.rpm state=present
 
+- name: Install older version of sprockets to deal with ruby v2.4
+  gem: name=sprockets version=3.7.2 user_install=no
+
 - name: install rails
   gem: name=rails version="{{ rails_version }}" user_install=no
 

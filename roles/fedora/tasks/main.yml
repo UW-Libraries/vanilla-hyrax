@@ -29,7 +29,7 @@
 
 - name: download fedora repository
   get_url: 
-    url: https://repo1.maven.org/maven2/org/fcrepo/fcrepo-webapp/{{ fedora_version }}/fcrepo-webapp-{{ fedora_version }}.war
+    url: "https://repo1.maven.org/maven2/org/fcrepo/fcrepo-webapp/{{ fedora_version }}/fcrepo-webapp-{{ fedora_version }}.war"
     dest: "{{ fedora_app_dir }}/fedora.war"
     owner: '{{ fedora_user }}'
     group: '{{ fedora_group }}'
@@ -44,6 +44,11 @@
     dest: "{{ application_home }}/config/fedora.yml"
     regexp: '127\.0\.0\.1:8983\/fedora\/rest'
     replace: '127.0.0.1:8080/fedora/rest'
+  ignore_errors: yes
+
+- name: Create fedora repo container for instance on tomcat
+  command: "curl -X PUT 'http://localhost:8080/fedora/rest/prod'"
+  creates: "{{ fedora_data_dir }}/fcrepo.object.directory/modeshape.repository"
 
 - name: restart tomcat
   service: name=tomcat enabled=yes state=restarted

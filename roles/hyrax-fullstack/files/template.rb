@@ -1,8 +1,10 @@
 #gem 'hyrax', '1.0.0.rc1'
 #gem 'hyrax', :github => 'samvera/hyrax', :branch => 'master'
-gem 'hyrax', :github => 'samvera/hyrax', :tag => 'v2.5.1'
+gem 'hyrax', :github => 'samvera/hyrax', :tag => 'v2.6.0'
 
-run 'bundle install --path vendor/bundle'
+run "bundle config set path 'vendor/bundle'"
+#run 'bundle install --path vendor/bundle'
+run 'bundle install'
 
 generate 'hyrax:install', '-f'
 

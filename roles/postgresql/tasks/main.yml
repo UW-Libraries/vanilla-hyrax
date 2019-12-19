@@ -43,18 +43,13 @@
   - name: Add pinned postgresql gem to gemfile
     lineinfile: "dest={{ application_home }}/Gemfile line=\"gem 'pg', '~>0.21'\""
 
-  - name: Add postgresql and sidekiq gem to gemfile
-    lineinfile: "dest={{ application_home }}/Gemfile line=\"gem '{{ item }}'\""
-    with_items:
-      - "sidekiq"
+  - name: Add sidekiq gem to gemfile
+    lineinfile: "dest={{ application_home }}/Gemfile line=\"gem 'sidekiq'\""
 
   - name: Install postgresql and sidekiq gem 
-    command: "bundle install --with production --path vendor/bundle chdir={{ application_home }}"
+    command: "bundle install --path vendor/bundle chdir={{ application_home }}"
 
-  #- name: update application's config/database.yml
-  #  template: src=database.yml.j2 dest={{ application_home }}/config/database.yml
-
-  - name: update application configs for database and sidekiq
+  - name: Copy application configs for database and sidekiq
     template: src={{ item }}.yml.j2 dest="{{ config_path }}/{{ item }}.yml"
     with_items:
       - "database"
